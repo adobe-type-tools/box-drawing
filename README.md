@@ -19,7 +19,7 @@ Feel free to create Box Drawing Characters that are longer than usual; exceeding
 
 
 Time was spent to make this script compatible with the triumvirate of commercial font editing applications; this means that this script will run in [RoboFont][], [Glyphs][], and even [FontLab][] without any modifications.  
-You can even run the script straight from the command line, which will generate a new UFO file right to your desktop.
+You can even run the script straight from the command line, which will generate a new [UFO file][ufo] right to your desktop.
 
 
 __Tested versions:__  
@@ -30,13 +30,13 @@ FontLab: 5.1.3 (4693)
 
 __Dependencies:__  
 When using Glyphs or FontLab, [Robofab][] must be installed and working.
-Also, running the script from the command line will not work without Robofab installed.
+Running the script from the command line will _not_ work without Robofab installed.
 
 
 ## What does this script not do?
 
 This script is not for adding Box Drawing Characters to existing, compiled fonts.  
-It is assumed you have type design software, and font source data available.
+It is assumed you have type design software, and font source data available; or at least know what to do with a [UFO file][ufo].
 
 
 ## What are Box Drawing Characters?
@@ -108,7 +108,7 @@ This is how the above text should look like if your browser is using a font with
 Alternate method:
 
 - Run the script on the command line.
-- A UFO full of box drawing characters is be stored on your desktop.
+- A UFO full of box drawing characters is created on your desktop (given that [Robofab][] is installed and working).
 
 
 
@@ -122,4 +122,4 @@ Alternate method:
 [glyphs]: http://glyphsapp.com/
 [fontlab]: http://www.fontlab.com/font-editor/fontlab-studio/
 [robofab]: http://robofab.org/
-
+[ufo]: http://unifiedfontobject.org/
