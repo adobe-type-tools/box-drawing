@@ -8,7 +8,7 @@ The reasoning behind this decision is that everyone will benefit from this consi
 The graphic designer will appreciate a multitude of combination possibilities; and an unseen dynamic range of drawing boxes.
 
 All that is why this script was written. It is not exactly an amazing, or creativity-challenging task to draw those quite generic glyphs.  
-Much more fun is derived from writing a script, and generating the silliest box drawing characters over and over again.
+Much more fun is derived from writing a script, and generating the silliest Box Drawing Characters over and over again.
 
 
 ## What does this script do?
@@ -91,11 +91,12 @@ As an example, see the “source code” (pun) of the [Adobe Type Team holiday c
 	   ╶═╝┎┘│━┵┼┶━│┈╢TEAM<╯
 	   ╺━│┃░▒▓▌!▐▓▒░┃││┼☑┘╳
 
+Most likely, the text above will not look real good. It is because most monospaced fonts (including the ones used in the Github CSS) do not include all of the Box Drawing Characters. Head over to the [Project Page][] for live examples of the text above (using Source Code Pro as a webfont), plus some more.
 
-This is how the above text should look like if your browser is using a font with proper box drawing support (e.g. [Source Code Pro][scp]):  
+<!-- This is how the above text should look like if your browser is using a font with proper box drawing support (e.g. [Source Code Pro][scp]):  
 ![boxes](img/boxes.png)  
 ![tree](img/tree.png)
-
+ -->
 
 
 ## Usage:
@@ -105,10 +106,10 @@ This is how the above text should look like if your browser is using a font with
 - Watch Box Drawing Characters emerge.
 - Done.
 
-Alternate method:
+__Alternate method:__
 
 - Run the script on the command line.
-- A UFO full of box drawing characters is created on your desktop (given that [Robofab][] is installed and working).
+- A UFO full of Box Drawing Characters is created on your desktop (given that [Robofab][] is installed and working).
 
 
 
@@ -123,3 +124,4 @@ Alternate method:
 [fontlab]: http://www.fontlab.com/font-editor/fontlab-studio/
 [robofab]: http://robofab.org/
 [ufo]: http://unifiedfontobject.org/
+[Project Page]: http://adobe-type-tools.github.com/boxDrawing/
