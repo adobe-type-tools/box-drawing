@@ -128,7 +128,7 @@ names = {
 	('vertlightrightheavybxd', '251D'): ['horHalfBar("right", fat)', 'vertBar()'],
 	('upheavyrightdnlightbxd', '251E'): ['horHalfBar("right")', 'vertHalfBar("top", fat, buttB = thickness)', 'vertHalfBar("bottom")'],
 	('dnheavyrightuplightbxd', '251F'): ['horHalfBar("right")', 'vertHalfBar("top")', 'vertHalfBar("bottom", fat, buttT = thickness)'],
-	('vertheavyrightlightbxd', '2520'):  ['horHalfBar("right")', 'vertBar(fat)'],
+	('vertheavyrightlightbxd', '2520'): ['horHalfBar("right")', 'vertBar(fat)'],
 	('dnlightrightupheavybxd', '2521'): ['horHalfBar("right", fat)', 'vertHalfBar("top", fat, buttB = thickness*fat)', 'vertHalfBar("bottom")'],
 	('uplightrightdnheavybxd', '2522'): ['horHalfBar("right", fat)', 'vertHalfBar("top")', 'vertHalfBar("bottom", fat, buttT = thickness*fat)'],
 	('heavyvertrightbxd', '2523'): ['horHalfBar("right", fat)', 'vertBar(fat)'],
@@ -136,7 +136,7 @@ names = {
 	('vertlightleftheavybxd', '2525'): ['horHalfBar("left", fat)', 'vertBar()'],
 	('upheavyleftdnlightbxd', '2526'): ['horHalfBar("left")', 'vertHalfBar("top", fat, buttB = thickness)', 'vertHalfBar("bottom")'],
 	('dnheavyleftuplightbxd', '2527'): ['horHalfBar("left")', 'vertHalfBar("top")', 'vertHalfBar("bottom", fat, buttT = thickness)'],
-	('vertheavyleftlightbxd', '2528'):  ['horHalfBar("left")', 'vertBar(fat)'],
+	('vertheavyleftlightbxd', '2528'): ['horHalfBar("left")', 'vertBar(fat)'],
 	('dnlightleftupheavybxd', '2529'): ['horHalfBar("left", fat)', 'vertHalfBar("top", fat, buttB = thickness*fat)', 'vertHalfBar("bottom")'],
 	('uplightleftdnheavybxd', '252A'): ['horHalfBar("left", fat)', 'vertHalfBar("top")', 'vertHalfBar("bottom", fat, buttT = thickness*fat)'],
 	('heavyvertleftbxd', '252B'): ['horHalfBar("left", fat)', 'vertBar(fat)'],
@@ -610,7 +610,79 @@ def innerCorner(side, fold, fatness=1):
 		vertLine(boxPen, (x,median-height/2), (x,median), thickness*fatness, buttT = -1*thickness)
 
 
+
+def proximity(x, value, dist):
+	# checks if a given value is close to another value (used for hatched shades)
+	if x > value-dist:
+		return True
+	else:
+		return False
+
 def stripedShade(pen, shade):
+	"Shading patterns, consisting of diagonal lines boxes."
+
+	# This function assumes a bunch of right triangles being moved across the width of the glyph.
+	# Below, the law of sines is used for start-and endpoint calculations.
+
+	if shade == '25':
+		step = width/2
+	if shade == '50':
+		step = width/4
+	if shade == '75':
+		step = width/8
+
+	line = width/20
+	diagonal = sqrt(width**2+blockHeight**2)
+	angle = asin(blockHeight/diagonal)
+
+	max = width
+	# To determine where the iteration below can stop, this is the point where the first diagonal line outside the glyph will cross the given baseline.
+
+	xValues = []
+	yValues = []
+	for w in range(0, max+line, step):
+		
+		if proximity(w, width, line):
+			xValues.append(width)
+		else:
+			xValues.append(w)
+
+		if proximity(w+line, width, line):
+			xValues.append(width)	
+		else:
+			xValues.append(w+line)
+
+	yBottom = blockOrigin[1]
+	yTop = blockOrigin[1] + blockHeight
+	xLeft = 0
+	xRight = width
+
+	for v in xValues:
+		target_y = yBottom + (v * sin(angle))/sin(radians(90)-angle)
+
+		if proximity(v, yTop, line):
+			yValues.append(int(round(target_y)))
+		else:
+			yValues.append(int(round(target_y)))
+
+	drawList = []
+	for step in range(0, len(xValues)-2, 2):
+		xValues[step], xValues[step+1]
+		drawList.append(((xValues[step], yBottom), (xValues[step+1], yBottom), (xLeft, yValues[step+1]), (xLeft, yValues[step])))
+	
+	for step in range(0, len(xValues)-2, 2):
+		drawList.append(((xRight, yValues[step]), (xRight, yValues[step+1]), (xValues[step+1], yTop), (xValues[step], yTop)))
+
+	for i in drawList:
+		BL = i[0]
+		BR = i[1]
+		TR = i[2]
+		TL = i[3]
+
+		drawRect(pen, BL, BR, TR, TL)
+
+
+def OldstripedShade(pen, shade):
 	"Shading patterns, consisting of diagonal lines boxes."
 	# This function assumes a bunch of right triangles being moved across the width of the glyph.
 	# Below, the law of sines is used for start-and endpoint calculations.
@@ -670,7 +742,7 @@ def stripedShade(pen, shade):
 		TL = (target_x, target_y)
 
 		if not target_x >= width:
-  		    drawRect(pen, BL, BR, TR, TL)
+			drawRect(pen, BL, BR, TR, TL)
 
 
 def removeOverlapForGlyphs(glyphname):
@@ -725,11 +797,11 @@ if fontExists:
 		fl.UpdateFont(fl.ifont)
 
 	if inRF:
-	    # Modifying the glyph order, so it looks like the glyphs have been appended at the end of the font.
-	    oldGlyphOrder = [ g for g in f.lib['public.glyphOrder'] if g not in generatedGlyphs ]
-	    newGlyphOrder = oldGlyphOrder + generatedGlyphs 
-	    f.glyphOrder = newGlyphOrder
-	    f.lib['public.glyphOrder'] = newGlyphOrder
+		# Modifying the glyph order, so it looks like the glyphs have been appended at the end of the font.
+		oldGlyphOrder = [ g for g in f.lib['public.glyphOrder'] if g not in generatedGlyphs ]
+		newGlyphOrder = oldGlyphOrder + generatedGlyphs 
+		f.glyphOrder = newGlyphOrder
+		f.lib['public.glyphOrder'] = newGlyphOrder
 
 	print '\nDone.'
-	    
+		
