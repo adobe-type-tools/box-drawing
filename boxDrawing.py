@@ -618,6 +618,7 @@ def proximity(x, value, dist):
 	else:
 		return False
 
+
 def stripedShade(pen, shade):
 	"Shading patterns, consisting of diagonal lines boxes."
 
@@ -680,69 +681,6 @@ def stripedShade(pen, shade):
 		TL = i[3]
 
 		drawRect(pen, BL, BR, TR, TL)
-
-
-def OldstripedShade(pen, shade):
-	"Shading patterns, consisting of diagonal lines boxes."
-	# This function assumes a bunch of right triangles being moved across the width of the glyph.
-	# Below, the law of sines is used for start-and endpoint calculations.
-
-	if shade == '25':
-		step = width/2
-	if shade == '50':
-		# step = width/10
-		step = width/4
-	if shade == '75':
-		step = width/8
-
-	line = width/20
-	diagonal = sqrt(width**2+blockHeight**2)
-	angle = asin(blockHeight/diagonal)
-
-	# There is also an an alternative angle, if so desired.
-	# angle_alt = asin(width/diagonal)
-	
-	max = int(round(width + (blockHeight * sin(radians(90)-angle))/sin(angle)))
-	# To determine where the iteration below can stop, this is the point where the first diagonal line outside the glyph will cross the given baseline.
-
-	widthSteps = []
-	for w in range(0, max, step):
-		widthSteps.append(w)
-
-	for first in widthSteps:
-		second = first+line
-		
-		start_x = first
-		start_x2 = second
-		start_y = blockOrigin[1]
-		start_y2 = blockOrigin[1]
-		target_x = 0
-		target_x2 = 0
-
-		if first >= width:
-			# At the point where the diagonal exceeds the width of the glyph, the start points must be moved up the right sidebearing.
-			start_x = width
-			start_x2 = width
-			start_y = blockOrigin[1] + ((first-width) * sin(angle))/sin(radians(90)-angle)
-			start_y2 = blockOrigin[1] + ((second-width) * sin(angle))/sin(radians(90)-angle)
-
-		target_y = blockOrigin[1] + (first * sin(angle))/sin(radians(90)-angle)
-		target_y2 = blockOrigin[1] + (second * sin(angle))/sin(radians(90)-angle)
-
-		if target_y >= blockOrigin[1] + blockHeight:
-			# When the diagonal exceeds the bounding box height, the end points must be moved along the top of the glyph.
-			target_x = first - (blockHeight * sin(radians(90)-angle)/sin(angle))
-			target_x2 = second - (blockHeight * sin(radians(90)-angle)/sin(angle))
-			target_y = blockOrigin[1] + blockHeight
-			target_y2 = blockOrigin[1] + blockHeight
-		
-		BL = (start_x, start_y)
-		BR = (start_x2, start_y2)
-		TR = (target_x2, target_y2)
-		TL = (target_x, target_y)
-
-		if not target_x >= width:
-			drawRect(pen, BL, BR, TR, TL)
 
 
 def removeOverlapForGlyphs(glyphname):
