@@ -91,6 +91,11 @@ As an example, see the “source code” (pun) of the [Adobe Type Team holiday c
 	   ╶═╝┎┘│━┵┼┶━│┈╢TEAM<╯
 	   ╺━│┃░▒▓▌!▐▓▒░┃││┼☑┘╳
 
+	Those examples above 
+	might look mis-aligned.
+	Why? Read on below: 
+	↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ 
+
 Most likely, the text above will not look real good. It is because most monospaced fonts (including the ones used in the Github CSS) do not include all of the Box Drawing Characters. Head over to the [Project Page][] for live examples of the text above (using Source Code Pro as a webfont), plus some more.
 
 <!-- This is how the above text should look like if your browser is using a font with proper box drawing support (e.g. [Source Code Pro][scp]):  
