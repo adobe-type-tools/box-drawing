@@ -18,7 +18,7 @@ The design of those characters is based on a handful of parameters, which can be
 Feel free to create Box Drawing Characters that are longer than usual; exceedingly wide, fat (both?); or hairline-thin.  
 
 
-Time was spent to make this script compatible with the triumvirate of commercial font editing applications; this means that this script will run in [RoboFont][], [Glyphs][], and even [FontLab][] without any modifications.  
+Time was spent to make this script compatible with the triumvirate of commercial font editing applications; this means that this script will run in [RoboFont][], [Glyphs][], and even [FontLab][] without any modifications (Glyphs support experimental).  
 You can even run the script straight from the command line, which will generate a new [UFO file][ufo] right to your desktop.
 
 
@@ -31,6 +31,8 @@ FontLab: 5.1.3 (4693)
 __Dependencies:__  
 When using Glyphs or FontLab, [Robofab][] must be installed and working.
 Running the script from the command line will _not_ work without Robofab installed.
+
+When using Glyphs, please make sure you have the [objectsGS.py][objectsGS] module installed.
 
 
 ## What does this script not do?
@@ -106,7 +108,7 @@ Most likely, the text above will not look real good. It is because most monospac
 
 ## Usage:
 - Open font editor of your choice (one of the three mentioned above).
-- Drag the the script file into the scripts panel.
+- Drag the the script file into the scripts panel; or move it to your scripts folder.
 - Run.
 - Watch Box Drawing Characters emerge.
 - Done.
@@ -130,3 +132,4 @@ __Alternate method:__
 [robofab]: http://robofab.org/
 [ufo]: http://unifiedfontobject.org/
 [Project Page]: http://adobe-type-tools.github.com/boxDrawing/
+[objectsGS]: https://github.com/schriftgestalt/Glyphs-Scripts/blob/master/objectsGS.py

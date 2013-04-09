@@ -86,7 +86,16 @@ else:
         fontExists = True
 
     if inGlyphs:
-        print 'Please open font first.'
+        try:
+            import objectsGS
+            # print 'Please open a font first.'
+
+        except ImportError:
+            print '''
+            The file objectsGS.py is needed for Robofab to be working in Glyphs.
+            Please get it at https://github.com/schriftgestalt/Glyphs-Scripts
+            '''
+
 
 if fontExists and inGlyphs:
     Doc = Glyphs.currentDocument
