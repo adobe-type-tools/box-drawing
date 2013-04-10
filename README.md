@@ -32,7 +32,7 @@ __Dependencies:__
 When using Glyphs or FontLab, [Robofab][] must be installed and working.
 Running the script from the command line will _not_ work without Robofab installed.
 
-When using Glyphs, please make sure you have the [objectsGS.py][objectsGS] module installed.
+When using Glyphs, please make sure you have the [GSPen.py][GSPen] and [objectsGS.py][objectsGS] modules installed.
 
 
 ## What does this script not do?

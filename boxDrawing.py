@@ -87,13 +87,13 @@ else:
 
     if inGlyphs:
         try:
-            import objectsGS
+            import objectsGS, GSPen
             # print 'Please open a font first.'
 
         except ImportError:
             print '''
-            The file objectsGS.py is needed for Robofab to be working in Glyphs.
-            Please get it at https://github.com/schriftgestalt/Glyphs-Scripts
+            The files GSPen.py and objectsGS.py are needed for Robofab to be working in Glyphs.
+            Please get them at https://github.com/schriftgestalt/Glyphs-Scripts
             '''
 
 
