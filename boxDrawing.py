@@ -70,40 +70,34 @@ if not any((inRF, inFL, inGlyphs)):
 if not inRF:
     from robofab.world import RFont, CurrentFont
 
+if inGlyphs:
+    try:
+        import objectsGS, GSPen
+    except ImportError:
+        print '''
+        The files GSPen.py and objectsGS.py are needed for Robofab to be working in Glyphs.
+        Please get them at https://github.com/schriftgestalt/Glyphs-Scripts
+        '''
+    try:
+        test = getattr(GSLayer, "removeOverlap")
+        if not callable(test):
+            raise
+    except:
+        raise AttributeError("Please update your objectsGS.py file. Download the latest verion at: https://github.com/schriftgestalt/Glyphs-Scripts")
 
 
 # Check if a font is open, if not create a new one.
-# Unless in Glyphs, where I do not know how to do that.
 
-fontExists = False
 f = CurrentFont()
 
-if f != None:
-    fontExists = True
-else:
-    if not inGlyphs:
-        f = RFont()
-        fontExists = True
 
-    if inGlyphs:
-        try:
-            import objectsGS, GSPen
-            # print 'Please open a font first.'
+if f == None:
+    f = RFont()
 
-        except ImportError:
-            print '''
-            The files GSPen.py and objectsGS.py are needed for Robofab to be working in Glyphs.
-            Please get them at https://github.com/schriftgestalt/Glyphs-Scripts
-            '''
+if f != None and inGlyphs:
+    f._object.font.disableUpdateInterface()
 
-
-if fontExists and inGlyphs:
-    Doc = Glyphs.currentDocument
-    GlyphsFont = Doc.font 
-    FontMaster = GlyphsFont.fontMasters()[0]
-
-
-names = { 
+names = {
     # List of glyphs and their drawing recipes.
 
     # Lines:
@@ -1011,17 +1005,9 @@ def stripedShade(pen, shade):
         drawRect(pen, BL, BR, TR, TL)
 
 
-def removeOverlapForGlyphs(glyphname):
-    # seriously.
-    Glyph = GlyphsFont.glyphs[glyphname]
-    Layer = Glyph.layerForKey_(FontMaster.id)
-    removeOverlapFilter = NSClassFromString("GlyphsFilterRemoveOverlap").alloc().init()
-    removeOverlapFilter.runFilterWithLayer_error_(Layer, None)
-
-    
 # Here, the main job is done:
 
-if fontExists:
+if f != None:
     print 'Drawing boxes ...'
 
     generatedGlyphs = []
@@ -1030,8 +1016,8 @@ if fontExists:
     for name, uni in sorted(names, key=lambda x: int(x[1], 16)):
         # sorting the dictionary by the unicode value of the glyph.
         generatedGlyphs.append(name)
-        commands = names[name, uni] 
-        print name        
+        commands = names[name, uni]
+        print name
         
         g = f.newGlyph(name, clear=True)
         g.width = width
@@ -1039,19 +1025,14 @@ if fontExists:
         for command in commands:
             exec(command)
 
-        if inGlyphs:
-            removeOverlapForGlyphs(name)
-            g.correctDirection()
-
-        if any((inRF, inFL)):
+        if not inShell:
             g.removeOverlap()
             g.correctDirection()
         
         g.unicode = int(uni, 16)
         g.update()
-            
-    f.update()    
-
+        
+    f.update()
 
     if inShell:
         timeString = time.strftime("%Y-%m-%d_%H%M%S", time.localtime())
@@ -1068,6 +1049,8 @@ if fontExists:
         newGlyphOrder = oldGlyphOrder + generatedGlyphs 
         f.glyphOrder = newGlyphOrder
         f.lib['public.glyphOrder'] = newGlyphOrder
-
+    if inGlyphs:
+        f._object.font.enableUpdateInterface()
+    
     print '\nDone.'
         
