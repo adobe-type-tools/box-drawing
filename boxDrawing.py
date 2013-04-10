@@ -51,18 +51,8 @@ if not any((inRF, inFL, inGlyphs)):
     try:
         import GlyphsApp
         inGlyphs = True
-        try:
-            test = getattr(GSLayer, "removeOverlap")
-            if not callable(test):
-                raise
-        except:
-            raise AttributeError("Please update your objectsGS.py file. Download the latest verion at: https://github.com/schriftgestalt/Glyphs-Scripts")
-        
     except ImportError:
-        print '''
-        The files GSPen.py and objectsGS.py are needed for Robofab to be working in Glyphs.
-        Please get them at https://github.com/schriftgestalt/Glyphs-Scripts
-        '''
+        pass
 
 if not any((inRF, inFL, inGlyphs)):
     try:
@@ -80,6 +70,20 @@ if not any((inRF, inFL, inGlyphs)):
 if not inRF:
     from robofab.world import RFont, CurrentFont
 
+if inGlyphs:
+    try:
+        import objectsGS, GSPen
+    except ImportError:
+        print '''
+        The files GSPen.py and objectsGS.py are needed for Robofab to be working in Glyphs.
+        Please get them at https://github.com/schriftgestalt/Glyphs-Scripts
+        '''
+    try:
+        test = getattr(GSLayer, "removeOverlap")
+        if not callable(test):
+            raise
+    except:
+        raise AttributeError("Please update your objectsGS.py file. Download the latest verion at: https://github.com/schriftgestalt/Glyphs-Scripts")
 
 
 # Check if a font is open, if not create a new one.
