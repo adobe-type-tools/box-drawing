@@ -90,12 +90,12 @@ if inGlyphs:
 
 f = CurrentFont()
 
-
 if f == None:
     f = RFont()
 
 if f != None and inGlyphs:
     f._object.font.disableUpdateInterface()
+
 
 names = {
     # List of glyphs and their drawing recipes.
@@ -678,7 +678,7 @@ def dashedVertLine(pen, step, length=blockHeight, thickness=thickness):
 
 def shade(pen, shade):
     "Shading patterns, consisting of little boxes."
-    # Not used, but maybe useful for somebody.
+    # Not used in recipes above, but maybe useful for somebody.
 
     vstep = 50
     hstep = 100
@@ -1005,7 +1005,7 @@ def stripedShade(pen, shade):
         drawRect(pen, BL, BR, TR, TL)
 
 
-# Here, the main job is done:
+# The main job is done here:
 
 if f != None:
     print 'Drawing boxes ...'
@@ -1038,7 +1038,9 @@ if f != None:
         timeString = time.strftime("%Y-%m-%d_%H%M%S", time.localtime())
         fileName = '%s_boxes.ufo' % timeString
         f.lib['public.glyphOrder'] = generatedGlyphs
-        f.save(os.path.expanduser('~/Desktop/%s' % fileName))
+        outputPath = os.sep.join((os.path.curdir, fileName))
+        f.save(outputPath)
+        print '\nFind your UFO file at %s' % os.path.abspath(outputPath)
 
     if inFL:
         fl.UpdateFont(fl.ifont)
@@ -1049,6 +1051,7 @@ if f != None:
         newGlyphOrder = oldGlyphOrder + generatedGlyphs 
         f.glyphOrder = newGlyphOrder
         f.lib['public.glyphOrder'] = newGlyphOrder
+    
     if inGlyphs:
         f._object.font.enableUpdateInterface()
     
