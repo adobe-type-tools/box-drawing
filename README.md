@@ -32,7 +32,7 @@ __Dependencies:__
 When using Glyphs or FontLab, [Robofab][] must be installed and working.
 Running the script from the command line will _not_ work without Robofab installed.
 
-When using Glyphs, please make sure you have the [GSPen.py](https://github.com/schriftgestalt/Glyphs-Scripts/blob/master/GSPen.py) and [objectsGS.py][objectsGS] modules installed.
+When using Glyphs, please make sure you have the [GSPen.py][] and [objectsGS.py][] modules installed.
 
 
 ## What does this script not do?
@@ -116,7 +116,7 @@ Most likely, the text above will not look real good. It is because most monospac
 __Alternate method:__
 
 - Run the script on the command line.
-- A UFO full of Box Drawing Characters is created on your desktop (given that [Robofab][] is installed and working).
+- A UFO full of Box Drawing Characters is created (given that [Robofab][] is installed and working).
 
 
 
@@ -132,4 +132,5 @@ __Alternate method:__
 [robofab]: http://robofab.org/
 [ufo]: http://unifiedfontobject.org/
 [Project Page]: http://adobe-type-tools.github.com/boxDrawing/
-[objectsGS]: https://github.com/schriftgestalt/Glyphs-Scripts/blob/master/objectsGS.py
+[objectsGS.py]: https://github.com/schriftgestalt/Glyphs-Scripts/blob/master/objectsGS.py
+[GSpen.py]: https://github.com/schriftgestalt/Glyphs-Scripts/blob/master/GSPen.py
