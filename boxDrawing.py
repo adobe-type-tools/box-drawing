@@ -18,11 +18,11 @@ The box-drawing itself is done using combinations of simple drawing commands; li
 width        = 1000          # Glyph width.
 height       = 1000          # Height for line elements, including overlap.
 median       = 380           # Median line.
-thickness    = 40            # General line thickness.
-fat          = 3             # Multiplication factor for drawing 'fat' lines; will multiply line thickness.
+stroke       = 40            # General stroke weight.
+fat          = 3             # Multiplication factor for drawing 'fat' lines; will multiply stroke weight.
 radius       = width/2       # Radius for arc elements.
 blockHeight  = 1000          # Height for block elements.
-fatThickness = thickness*fat # line thickness for 'fat' lines
+fatStroke    = stroke*fat    # stroke thickness for 'fat' lines
 
 # Those following values are for block elements, and are dependent of the values above.
 blockOrigin = (0,median-blockHeight/2)
@@ -111,27 +111,27 @@ names = {
 
     ('lighttrpldashhorzbxd', '2504'):           ['dashedHorLine(boxPen, step=3)'],
 
-    ('heavytrpldashhorzbxd', '2505'):           ['dashedHorLine(boxPen, step=3, thickness=fatThickness)'],
+    ('heavytrpldashhorzbxd', '2505'):           ['dashedHorLine(boxPen, step=3, stroke=fatStroke)'],
 
     ('lighttrpldashvertbxd', '2506'):           ['dashedVertLine(boxPen, step=3)'],
 
-    ('heavytrpldashvertbxd', '2507'):           ['dashedVertLine(boxPen, step=3, thickness=fatThickness)'],
+    ('heavytrpldashvertbxd', '2507'):           ['dashedVertLine(boxPen, step=3, stroke=fatStroke)'],
 
     ('lightquaddashhorzbxd', '2508'):           ['dashedHorLine(boxPen, step=4)'],
 
-    ('heavyquaddashhorzbxd', '2509'):           ['dashedHorLine(boxPen, step=4, thickness=fatThickness)'],
+    ('heavyquaddashhorzbxd', '2509'):           ['dashedHorLine(boxPen, step=4, stroke=fatStroke)'],
 
     ('lightquaddashvertbxd', '250A'):           ['dashedVertLine(boxPen, step=4)'],
 
-    ('heavyquaddashvertbxd', '250B'):           ['dashedVertLine(boxPen, step=4, thickness=fatThickness)'],
+    ('heavyquaddashvertbxd', '250B'):           ['dashedVertLine(boxPen, step=4, stroke=fatStroke)'],
 
     ('lightdbldashhorzbxd', '254C'):            ['dashedHorLine(boxPen, step=2)'],
 
-    ('heavydbldashhorzbxd', '254D'):            ['dashedHorLine(boxPen, step=2, thickness=fatThickness)'],
+    ('heavydbldashhorzbxd', '254D'):            ['dashedHorLine(boxPen, step=2, stroke=fatStroke)'],
 
     ('lightdbldashvertbxd', '254E'):            ['dashedVertLine(boxPen, step=2)'],
 
-    ('heavydbldashvertbxd', '254F'):            ['dashedVertLine(boxPen, step=2, thickness=fatThickness)'],
+    ('heavydbldashvertbxd', '254F'):            ['dashedVertLine(boxPen, step=2, stroke=fatStroke)'],
 
 
     # Corners:
@@ -142,10 +142,10 @@ names = {
                                                  'vertHalfBar("bottom")'],
 
     ('dnheavyrightlightbxd', '250E'):           ['horHalfBar("right")',
-                                                 'vertHalfBar("bottom", fat, buttT=thickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=stroke)'],
 
     ('heavydnrightbxd', '250F'):                ['horHalfBar("right", fat)',
-                                                 'vertHalfBar("bottom", fat, buttT=fatThickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=fatStroke)'],
 
     ('lightdnleftbxd', '2510'):                 ['horHalfBar("left")',
                                                  'vertHalfBar("bottom")'],
@@ -154,10 +154,10 @@ names = {
                                                  'vertHalfBar("bottom")'],
 
     ('dnheavyleftlightbxd', '2512'):            ['horHalfBar("left")',
-                                                 'vertHalfBar("bottom", fat, buttT=thickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=stroke)'],
 
     ('heavydnleftbxd', '2513'):                 ['horHalfBar("left", fat)',
-                                                 'vertHalfBar("bottom", fat, buttT=fatThickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=fatStroke)'],
 
     ('lightuprightbxd', '2514'):                ['horHalfBar("right")',
                                                  'vertHalfBar("top")'],
@@ -166,10 +166,10 @@ names = {
                                                  'vertHalfBar("top")'],
 
     ('upheavyrightlightbxd', '2516'):           ['horHalfBar("right")',
-                                                 'vertHalfBar("top", fat, buttB=thickness)'],
+                                                 'vertHalfBar("top", fat, buttB=stroke)'],
 
     ('heavyuprightbxd', '2517'):                ['horHalfBar("right", fat)',
-                                                 'vertHalfBar("top", fat, buttB=fatThickness)'],
+                                                 'vertHalfBar("top", fat, buttB=fatStroke)'],
 
     ('lightupleftbxd', '2518'):                 ['horHalfBar("left")',
                                                  'vertHalfBar("top")'],
@@ -178,10 +178,10 @@ names = {
                                                  'vertHalfBar("top")'],
 
     ('upheavyleftlightbxd', '251A'):            ['horHalfBar("left")',
-                                                 'vertHalfBar("top", fat, buttB=thickness)'],
+                                                 'vertHalfBar("top", fat, buttB=stroke)'],
 
     ('heavyupleftbxd', '251B'):                 ['horHalfBar("left", fat)',
-                                                 'vertHalfBar("top", fat, buttB=fatThickness)'],
+                                                 'vertHalfBar("top", fat, buttB=fatStroke)'],
 
 
     # Joints:
@@ -192,23 +192,23 @@ names = {
                                                  'vertBar()'],
 
     ('upheavyrightdnlightbxd', '251E'):         ['horHalfBar("right")',
-                                                 'vertHalfBar("top", fat, buttB=thickness)',
+                                                 'vertHalfBar("top", fat, buttB=stroke)',
                                                  'vertHalfBar("bottom")'],
 
     ('dnheavyrightuplightbxd', '251F'):         ['horHalfBar("right")',
                                                  'vertHalfBar("top")',
-                                                 'vertHalfBar("bottom", fat, buttT=thickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=stroke)'],
 
     ('vertheavyrightlightbxd', '2520'):         ['horHalfBar("right")',
                                                  'vertBar(fat)'],
 
     ('dnlightrightupheavybxd', '2521'):         ['horHalfBar("right", fat)',
-                                                 'vertHalfBar("top", fat, buttB=fatThickness)',
+                                                 'vertHalfBar("top", fat, buttB=fatStroke)',
                                                  'vertHalfBar("bottom")'],
 
     ('uplightrightdnheavybxd', '2522'):         ['horHalfBar("right", fat)',
                                                  'vertHalfBar("top")',
-                                                 'vertHalfBar("bottom", fat, buttT=fatThickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=fatStroke)'],
 
     ('heavyvertrightbxd', '2523'):              ['horHalfBar("right", fat)',
                                                  'vertBar(fat)'],
@@ -220,23 +220,23 @@ names = {
                                                  'vertBar()'],
 
     ('upheavyleftdnlightbxd', '2526'):          ['horHalfBar("left")',
-                                                 'vertHalfBar("top", fat, buttB=thickness)',
+                                                 'vertHalfBar("top", fat, buttB=stroke)',
                                                  'vertHalfBar("bottom")'],
 
     ('dnheavyleftuplightbxd', '2527'):          ['horHalfBar("left")',
                                                  'vertHalfBar("top")',
-                                                 'vertHalfBar("bottom", fat, buttT=thickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=stroke)'],
 
     ('vertheavyleftlightbxd', '2528'):          ['horHalfBar("left")',
                                                  'vertBar(fat)'],
 
     ('dnlightleftupheavybxd', '2529'):          ['horHalfBar("left", fat)',
-                                                 'vertHalfBar("top", fat, buttB=fatThickness)',
+                                                 'vertHalfBar("top", fat, buttB=fatStroke)',
                                                  'vertHalfBar("bottom")'],
 
     ('uplightleftdnheavybxd', '252A'):          ['horHalfBar("left", fat)',
                                                  'vertHalfBar("top")',
-                                                 'vertHalfBar("bottom", fat, buttT=fatThickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=fatStroke)'],
 
     ('heavyvertleftbxd', '252B'):               ['horHalfBar("left", fat)',
                                                  'vertBar(fat)'],
@@ -260,11 +260,11 @@ names = {
 
     ('rightlightleftdnheavybxd', '2531'):       ['horHalfBar("left", fat)',
                                                  'horHalfBar("right")',
-                                                 'vertHalfBar("bottom", fat, buttT=fatThickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=fatStroke)'],
 
     ('leftlightrightdnheavybxd', '2532'):       ['horHalfBar("left")',
                                                  'horHalfBar("right", fat)',
-                                                 'vertHalfBar("bottom", fat, buttT=fatThickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=fatStroke)'],
 
     ('heavydnhorzbxd', '2533'):                 ['horBar(fat)',
                                                  'vertHalfBar("bottom", fat)'],
@@ -288,11 +288,11 @@ names = {
 
     ('rightlightleftupheavybxd', '2539'):       ['horHalfBar("left", fat)',
                                                  'horHalfBar("right")',
-                                                 'vertHalfBar("top", fat, buttB=fatThickness)'],
+                                                 'vertHalfBar("top", fat, buttB=fatStroke)'],
 
     ('leftlightrightupheavybxd', '253A'):       ['horHalfBar("left")',
                                                  'horHalfBar("right", fat)',
-                                                 'vertHalfBar("top", fat, buttB=fatThickness)'],
+                                                 'vertHalfBar("top", fat, buttB=fatStroke)'],
 
     ('heavyuphorzbxd', '253B'):                 ['horBar(fat)',
                                                  'vertHalfBar("top", fat)'],
@@ -324,23 +324,23 @@ names = {
     ('vertheavyhorzlightbxd', '2542'):          ['horBar()',
                                                  'vertBar(fat)'],
 
-    ('leftupheavyrightdnlightbxd', '2543'):     ['horHalfBar("left", fat, buttR=fatThickness)',
+    ('leftupheavyrightdnlightbxd', '2543'):     ['horHalfBar("left", fat, buttR=fatStroke)',
                                                  'horHalfBar("right")',
                                                  'vertHalfBar("top", fat)',
                                                  'vertHalfBar("bottom")'],
 
     ('rightupheavyleftdnlightbxd', '2544'):     ['horHalfBar("left")',
-                                                 'horHalfBar("right", fat, buttL=fatThickness)',
+                                                 'horHalfBar("right", fat, buttL=fatStroke)',
                                                  'vertHalfBar("top", fat)',
                                                  'vertHalfBar("bottom")'],
 
-    ('leftdnheavyrightuplightbxd', '2545'):     ['horHalfBar("left", fat, buttR=fatThickness)',
+    ('leftdnheavyrightuplightbxd', '2545'):     ['horHalfBar("left", fat, buttR=fatStroke)',
                                                  'horHalfBar("right")',
                                                  'vertHalfBar("top")',
                                                  'vertHalfBar("bottom", fat)'],
 
     ('rightdnheavyleftuplightbxd', '2546'):     ['horHalfBar("left")',
-                                                 'horHalfBar("right", fat, buttL=fatThickness)',
+                                                 'horHalfBar("right", fat, buttL=fatStroke)',
                                                  'vertHalfBar("top")',
                                                  'vertHalfBar("bottom", fat)'],
 
@@ -370,37 +370,37 @@ names = {
     ('dblvertbxd', '2551'):                     ['vertSplitBar()'],
 
     ('dnsngrightdblbxd', '2552'):               ['horSplitHalfBar("right")',
-                                                 'vertHalfBar("bottom", buttT=3*thickness)'],
+                                                 'vertHalfBar("bottom", buttT=3*stroke)'],
 
     ('dndblrightsngbxd', '2553'):               ['horHalfBar("right")',
-                                                 'vertSplitHalfBar("bottom", buttT=thickness)'],
+                                                 'vertSplitHalfBar("bottom", buttT=stroke)'],
 
     ('dbldnrightbxd', '2554'):                  ['outerCorner("right", "bottom")',
                                                  'innerCorner("right", "bottom")'],
 
     ('dnsngleftdblbxd', '2555'):                ['horSplitHalfBar("left")',
-                                                 'vertHalfBar("bottom", buttT=3*thickness)'],
+                                                 'vertHalfBar("bottom", buttT=3*stroke)'],
 
     ('dndblleftsngbxd', '2556'):                ['horHalfBar("left")',
-                                                 'vertSplitHalfBar("bottom", buttT=thickness)'],
+                                                 'vertSplitHalfBar("bottom", buttT=stroke)'],
 
     ('dbldnleftbxd', '2557'):                   ['outerCorner("left", "bottom")',
                                                  'innerCorner("left", "bottom")'],
 
     ('upsngrightdblbxd', '2558'):               ['horSplitHalfBar("right")',
-                                                 'vertHalfBar("top", buttB=3*thickness)'],
+                                                 'vertHalfBar("top", buttB=3*stroke)'],
 
     ('updblrightsngbxd', '2559'):               ['horHalfBar("right")',
-                                                 'vertSplitHalfBar("top", buttB=thickness)'],
+                                                 'vertSplitHalfBar("top", buttB=stroke)'],
 
     ('dbluprightbxd', '255A'):                  ['outerCorner("right", "top")',
                                                  'innerCorner("right", "top")'],
 
     ('upsngleftdblbxd', '255B'):                ['horSplitHalfBar("left")',
-                                                 'vertHalfBar("top", buttB=3*thickness)'],
+                                                 'vertHalfBar("top", buttB=3*stroke)'],
 
     ('updblleftsngbxd', '255C'):                ['horHalfBar("left")',
-                                                 'vertSplitHalfBar("top", buttB=thickness)'],
+                                                 'vertSplitHalfBar("top", buttB=stroke)'],
 
     ('dblupleftbxd', '255D'):                   ['outerCorner("left", "top")',
                                                  'innerCorner("left", "top")'],
@@ -408,40 +408,40 @@ names = {
     ('vertsngrightdblbxd', '255E'):             ['horSplitHalfBar("right")',
                                                  'vertBar()'],
 
-    ('vertdblrightsngbxd', '255F'):             ['horHalfBar("right", buttL = thickness*-1)',
+    ('vertdblrightsngbxd', '255F'):             ['horHalfBar("right", buttL = stroke*-1)',
                                                  'vertSplitBar()'],
 
-    ('dblvertrightbxd', '2560'):                ['vertLine(boxPen, (width/2-thickness,median-height/2), (width/2-thickness,median+height/2), thickness)',
+    ('dblvertrightbxd', '2560'):                ['vertLine(boxPen, (width/2-stroke,median-height/2), (width/2-stroke,median+height/2), stroke)',
                                                  'innerCorner("right", "top")',
                                                  'innerCorner("right", "bottom")'],
 
     ('vertsngleftdblbxd', '2561'):              ['horSplitHalfBar("left")',
                                                  'vertBar()'],
 
-    ('vertdblleftsngbxd', '2562'):              ['horHalfBar("left", buttR = thickness*-1)',
+    ('vertdblleftsngbxd', '2562'):              ['horHalfBar("left", buttR = stroke*-1)',
                                                  'vertSplitBar()'],
 
-    ('dblvertleftbxd', '2563'):                 ['vertLine(boxPen, (width/2+thickness,median-height/2), (width/2+thickness,median+height/2), thickness)',
+    ('dblvertleftbxd', '2563'):                 ['vertLine(boxPen, (width/2+stroke,median-height/2), (width/2+stroke,median+height/2), stroke)',
                                                  'innerCorner("left", "top")',
                                                  'innerCorner("left", "bottom")'],
 
     ('dnsnghorzdblbxd', '2564'):                ['horSplitBar()',
-                                                 'vertLine(boxPen, (width/2, median-height/2), (width/2, median-thickness), thickness)'],
+                                                 'vertLine(boxPen, (width/2, median-height/2), (width/2, median-stroke), stroke)'],
 
     ('dndblhorzsngbxd', '2565'):                ['horBar()',
                                                  'vertSplitHalfBar("bottom")'],
 
-    ('dbldnhorzbxd', '2566'):                   ['horLine(boxPen, (0,median+thickness), (width,median+thickness), thickness, thickness, thickness)',
+    ('dbldnhorzbxd', '2566'):                   ['horLine(boxPen, (0,median+stroke), (width,median+stroke), stroke, stroke, stroke)',
                                                  'innerCorner("left", "bottom")',
                                                  'innerCorner("right", "bottom")'],
 
     ('upsnghorzdblbxd', '2567'):                ['horSplitBar()',
-                                                 'vertLine(boxPen, (width/2, median+thickness), (width/2, median+height/2), thickness)'],
+                                                 'vertLine(boxPen, (width/2, median+stroke), (width/2, median+height/2), stroke)'],
 
     ('updblhorzsngbxd', '2568'):                ['horBar()',
                                                  'vertSplitHalfBar("top")'],
 
-    ('dbluphorzbxd', '2569'):                   ['horLine(boxPen, (0,median-thickness), (width,median-thickness), thickness, thickness, thickness)',
+    ('dbluphorzbxd', '2569'):                   ['horLine(boxPen, (0,median-stroke), (width,median-stroke), stroke, stroke, stroke)',
                                                  'innerCorner("left", "top")',
                                                  'innerCorner("right", "top")'],
 
@@ -457,50 +457,50 @@ names = {
 
 
     # Rounded corners, diagonals:
-    ('lightarcdnrightbxd', '256D'):             ['arc(boxPen, (width/2,median-height/2), (width,median), "TL", thickness, radius, thickness)'],
+    ('lightarcdnrightbxd', '256D'):             ['arc(boxPen, (width/2,median-height/2), (width,median), "TL", stroke, radius, stroke)'],
 
-    ('lightarcdnleftbxd', '256E'):              ['arc(boxPen, (width/2,median-height/2), (0,median), "TR", thickness, radius, thickness)'],
+    ('lightarcdnleftbxd', '256E'):              ['arc(boxPen, (width/2,median-height/2), (0,median), "TR", stroke, radius, stroke)'],
 
-    ('lightarcupleftbxd', '256F'):              ['arc(boxPen, (width/2,median+height/2), (0,median), "BR", thickness, radius, thickness)'],
+    ('lightarcupleftbxd', '256F'):              ['arc(boxPen, (width/2,median+height/2), (0,median), "BR", stroke, radius, stroke)'],
 
-    ('lightarcuprightbxd', '2570'):             ['arc(boxPen, (width/2,median+height/2), (width,median), "BL", thickness, radius, thickness)'],
+    ('lightarcuprightbxd', '2570'):             ['arc(boxPen, (width/2,median+height/2), (width,median), "BL", stroke, radius, stroke)'],
 
-    ('lightdiaguprightdnleftbxd', '2571'):      ['diagonalBottomUp(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), thickness)'],
+    ('lightdiaguprightdnleftbxd', '2571'):      ['diagonalBottomUp(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), stroke)'],
 
-    ('lightdiagupleftdnrightbxd', '2572'):      ['diagonalTopDown(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), thickness)'],
+    ('lightdiagupleftdnrightbxd', '2572'):      ['diagonalTopDown(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), stroke)'],
 
-    ('lightdiagcrossbxd', '2573'):              ['diagonalTopDown(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), thickness)', 
-                                                 'diagonalBottomUp(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), thickness)'],
+    ('lightdiagcrossbxd', '2573'):              ['diagonalTopDown(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), stroke)', 
+                                                 'diagonalBottomUp(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), stroke)'],
 
 
     # Half-width/Half-height:
     ('lightleftbxd', '2574'):                   ['horHalfBar("left")'],
 
-    ('lightupbxd', '2575'):                     ['vertHalfBar("top", buttB=thickness)'],
+    ('lightupbxd', '2575'):                     ['vertHalfBar("top", buttB=stroke)'],
 
     ('lightrightbxd', '2576'):                  ['horHalfBar("right")'],
 
-    ('lightdnbxd', '2577'):                     ['vertHalfBar("bottom", buttT=thickness)'],
+    ('lightdnbxd', '2577'):                     ['vertHalfBar("bottom", buttT=stroke)'],
 
     ('heavyleftbxd', '2578'):                   ['horHalfBar("left", fat)'],
 
-    ('heavyupbxd', '2579'):                     ['vertHalfBar("top", fat, buttB=thickness)'],
+    ('heavyupbxd', '2579'):                     ['vertHalfBar("top", fat, buttB=stroke)'],
 
     ('heavyrightbxd', '257A'):                  ['horHalfBar("right", fat)'],
 
-    ('heavydnbxd', '257B'):                     ['vertHalfBar("bottom", fat, buttT=thickness)'],
+    ('heavydnbxd', '257B'):                     ['vertHalfBar("bottom", fat, buttT=stroke)'],
 
     ('lightleftheavyrightbxd', '257C'):         ['horHalfBar("left")',
                                                  'horHalfBar("right", fat)'],
 
     ('lightupheavydnbxd', '257D'):              ['vertHalfBar("top")',
-                                                 'vertHalfBar("bottom", fat, buttT=thickness)'],
+                                                 'vertHalfBar("bottom", fat, buttT=stroke)'],
 
     ('heavyleftlightrightbxd', '257E'):         ['horHalfBar("right")',
                                                  'horHalfBar("left", fat)'],
 
     ('heavyuplightdnbxd', '257F'):              ['vertHalfBar("bottom")',
-                                                 'vertHalfBar("top", fat, buttB=thickness)'],
+                                                 'vertHalfBar("top", fat, buttB=stroke)'],
 
 
     # Block elements:
@@ -613,7 +613,7 @@ def drawArc(pen, start1, start2, end1, end2, IAstart, IApoint1, IApoint2, IAend,
     pen.closePath() 
 
 
-def horLine(pen, start, end, thickness, buttL=0, buttR=0): 
+def horLine(pen, start, end, stroke, buttL=0, buttR=0): 
     "General drawing function for a horizontal line."
 
     startX = start[0]
@@ -621,15 +621,15 @@ def horLine(pen, start, end, thickness, buttL=0, buttR=0):
     endX = end[0]
     endY = end[1]
 
-    BL = (startX-buttL/2, endY-thickness/2)
-    BR = (endX+buttR/2, endY-thickness/2)
-    TR = (endX+buttR/2, endY+thickness/2)
-    TL = (startX-buttL/2, startY+thickness/2)
+    BL = (startX-buttL/2, endY-stroke/2)
+    BR = (endX+buttR/2, endY-stroke/2)
+    TR = (endX+buttR/2, endY+stroke/2)
+    TL = (startX-buttL/2, startY+stroke/2)
 
     drawRect(pen, BL, BR, TR, TL)
 
 
-def vertLine(pen, start, end, thickness, buttB=0, buttT=0): 
+def vertLine(pen, start, end, stroke, buttB=0, buttT=0): 
     "General drawing function for a vertical line."
 
     startX = start[0]
@@ -637,10 +637,10 @@ def vertLine(pen, start, end, thickness, buttB=0, buttT=0):
     endX = end[0]
     endY = end[1]
         
-    BL = (startX-thickness/2, startY-buttB/2)
-    BR = (startX+thickness/2, startY-buttB/2)
-    TR = (startX+thickness/2, endY+buttT/2)
-    TL = (startX-thickness/2, endY+buttT/2)
+    BL = (startX-stroke/2, startY-buttB/2)
+    BR = (startX+stroke/2, startY-buttB/2)
+    TR = (startX+stroke/2, endY+buttT/2)
+    TL = (startX-stroke/2, endY+buttT/2)
 
     drawRect(pen, BL, BR, TR, TL)
 
@@ -661,7 +661,7 @@ def box(pen, start=blockOrigin, end=blockTop, buttH=0, buttV=0):
     drawRect(pen, BL, BR, TR, TL)
 
 
-def dashedHorLine(pen, step, width=width, thickness=thickness):
+def dashedHorLine(pen, step, width=width, stroke=stroke):
     "Dashed horizontal bar."
 
     stepLength = width/step
@@ -669,10 +669,10 @@ def dashedHorLine(pen, step, width=width, thickness=thickness):
     for w in floatRange(0, width, stepLength):
         if w+stepLength-gap < width:
             w = w+gap/2 # centering the dashed line in the glyph
-            horLine(boxPen, (w,median), (w+stepLength-gap,median), thickness)
+            horLine(boxPen, (w,median), (w+stepLength-gap,median), stroke)
 
 
-def dashedVertLine(pen, step, length=blockHeight, thickness=thickness):
+def dashedVertLine(pen, step, length=blockHeight, stroke=stroke):
     "Dashed vertical bar."
 
     stepLength = length/step
@@ -680,7 +680,7 @@ def dashedVertLine(pen, step, length=blockHeight, thickness=thickness):
     for h in floatRange(median-length/2, median+length/2, stepLength):
         if h+stepLength-gap < length:
             h = h+gap/2
-            vertLine(boxPen, (width/2,h), (width/2,h+stepLength-gap), thickness)
+            vertLine(boxPen, (width/2,h), (width/2,h+stepLength-gap), stroke)
 
 
 def shade(pen, shade):
@@ -753,7 +753,7 @@ def diagonalTopDown(pen, start, end, butt=0):
     pen.closePath() 
 
 
-def arc(pen, start, end, side, thickness, radius, butt=0):
+def arc(pen, start, end, side, stroke, radius, butt=0):
     "Rounded corner."
     
     kappa = 4*(sqrt(2)-1)/3
@@ -782,52 +782,52 @@ def arc(pen, start, end, side, thickness, radius, butt=0):
     cEndX = startX+(radius*xflip)
     cEndY = endY
 
-    start1 = (startX-(thickness/2*xflip), startY)
-    start2 = (startX+(thickness/2*xflip), startY)
-    end1 = (endX+(butt/2*xflip), endY-(thickness/2*yflip))
-    end2 = (endX+(butt/2*xflip), endY+(thickness/2*yflip))
+    start1 = (startX-(stroke/2*xflip), startY)
+    start2 = (startX+(stroke/2*xflip), startY)
+    end1 = (endX+(butt/2*xflip), endY-(stroke/2*yflip))
+    end2 = (endX+(butt/2*xflip), endY+(stroke/2*yflip))
     
-    IAstart = (cStartX+(thickness/2*xflip),cStartY)
-    IApoint1 = (cStartX+(thickness/2*xflip),cStartY+((radius-thickness/2)*kappa*yflip))
-    IApoint2 = (cEndX-((radius-thickness/2)*kappa*xflip),cEndY-(thickness/2*yflip))
-    IAend =  (cEndX,cEndY-(thickness/2*yflip))
+    IAstart = (cStartX+(stroke/2*xflip),cStartY)
+    IApoint1 = (cStartX+(stroke/2*xflip),cStartY+((radius-stroke/2)*kappa*yflip))
+    IApoint2 = (cEndX-((radius-stroke/2)*kappa*xflip),cEndY-(stroke/2*yflip))
+    IAend =  (cEndX,cEndY-(stroke/2*yflip))
 
-    OAstart = (cEndX,cEndY+(thickness/2*yflip))
-    OApoint1 = (cEndX-((radius+thickness/2)*kappa*xflip), cEndY+(thickness/2*yflip))
-    OApoint2 = (cStartX-(thickness/2*xflip), cStartY+((radius+thickness/2)*kappa*yflip))
-    OAend =  (cStartX-(thickness/2*xflip),cStartY)
+    OAstart = (cEndX,cEndY+(stroke/2*yflip))
+    OApoint1 = (cEndX-((radius+stroke/2)*kappa*xflip), cEndY+(stroke/2*yflip))
+    OApoint2 = (cStartX-(stroke/2*xflip), cStartY+((radius+stroke/2)*kappa*yflip))
+    OAend =  (cStartX-(stroke/2*xflip),cStartY)
 
     drawArc(pen, start1, start2, end1, end2, IAstart, IApoint1, IApoint2, IAend, OAstart, OApoint1, OApoint2, OAend)
 
 
-def horBar(fatness=1, buttL=thickness, buttR=thickness):
+def horBar(fatness=1, buttL=stroke, buttR=stroke):
     "Horizontal bar."
 
-    horLine(boxPen, (0,median), (width,median), thickness*fatness, buttL, buttR)
+    horLine(boxPen, (0,median), (width,median), stroke*fatness, buttL, buttR)
 
 
 def vertBar(fatness=1, buttB=0, buttT=0):
     "Vertical bar."
 
-    vertLine(boxPen, (width/2,median-height/2), (width/2,median+height/2), thickness*fatness, buttB, buttT)
+    vertLine(boxPen, (width/2,median-height/2), (width/2,median+height/2), stroke*fatness, buttB, buttT)
 
 
-def horHalfBar(side, fatness=1, buttL=thickness, buttR=thickness):
+def horHalfBar(side, fatness=1, buttL=stroke, buttR=stroke):
     "Half-width horizontal bar, left or right."
 
     if side == 'left':
-        horLine(boxPen, (0,median), (width/2,median), thickness*fatness, buttL, buttR)
+        horLine(boxPen, (0,median), (width/2,median), stroke*fatness, buttL, buttR)
     elif side == 'right':
-        horLine(boxPen, (width/2,median), (width,median), thickness*fatness, buttL, buttR)
+        horLine(boxPen, (width/2,median), (width,median), stroke*fatness, buttL, buttR)
 
 
 def vertHalfBar(fold, fatness=1, buttB=0, buttT=0):
     "Half-height vertical bar, top or bottom."
     
     if fold == 'top':
-        vertLine(boxPen, (width/2,median), (width/2,median+height/2), thickness*fatness, buttB, buttT)
+        vertLine(boxPen, (width/2,median), (width/2,median+height/2), stroke*fatness, buttB, buttT)
     if fold == 'bottom':
-        vertLine(boxPen, (width/2,median-height/2), (width/2,median), thickness*fatness, buttB, buttT)
+        vertLine(boxPen, (width/2,median-height/2), (width/2,median), stroke*fatness, buttB, buttT)
         
 
 def horSplitBar(fatness=1):
@@ -835,48 +835,48 @@ def horSplitBar(fatness=1):
 
     # moving the median up and down. Not very elegant, but it works.
     global median
-    median += thickness * fatness
+    median += stroke * fatness
     horBar(fatness)
-    median -= thickness * fatness
+    median -= stroke * fatness
     
-    median -= thickness * fatness
+    median -= stroke * fatness
     horBar(fatness)
-    median += thickness * fatness
+    median += stroke * fatness
 
 
 def vertSplitBar(fatness=1, buttB=0, buttT=0):
     "Double-stroked vertical bar, top or bottom."
 
-    leftX = width/2-(thickness*fatness)
-    rightX = width/2+(thickness*fatness)
-    vertLine(boxPen, (leftX,median-height/2), (leftX,median+height/2), thickness*fatness, buttB, buttT)
-    vertLine(boxPen, (rightX,median-height/2), (rightX,median+height/2), thickness*fatness, buttB, buttT)
+    leftX = width/2-(stroke*fatness)
+    rightX = width/2+(stroke*fatness)
+    vertLine(boxPen, (leftX,median-height/2), (leftX,median+height/2), stroke*fatness, buttB, buttT)
+    vertLine(boxPen, (rightX,median-height/2), (rightX,median+height/2), stroke*fatness, buttB, buttT)
 
 
 def horSplitHalfBar(side, fatness=1):
     "Double-stroked half-width horizontal bar, left or right."
 
     global median
-    median += thickness * fatness
+    median += stroke * fatness
     horHalfBar(side)
-    median -= thickness * fatness
+    median -= stroke * fatness
     
-    median -= thickness * fatness
+    median -= stroke * fatness
     horHalfBar(side)
-    median += thickness * fatness
+    median += stroke * fatness
 
 
 def vertSplitHalfBar(fold, fatness=1, buttB=0, buttT=0):
     "Double-stroked half-height vertical bar, top or bottom."
 
-    leftX = width/2- thickness*fatness
-    rightX = width/2+ thickness*fatness
+    leftX = width/2- stroke*fatness
+    rightX = width/2+ stroke*fatness
     if fold == 'top':
-        vertLine(boxPen, (leftX,median), (leftX,median+height/2), thickness*fatness, buttB, buttT)
-        vertLine(boxPen, (rightX,median), (rightX,median+height/2), thickness*fatness, buttB, buttT)
+        vertLine(boxPen, (leftX,median), (leftX,median+height/2), stroke*fatness, buttB, buttT)
+        vertLine(boxPen, (rightX,median), (rightX,median+height/2), stroke*fatness, buttB, buttT)
     if fold == 'bottom':
-        vertLine(boxPen, (leftX,median-height/2), (leftX,median), thickness*fatness, buttB, buttT)
-        vertLine(boxPen, (rightX,median-height/2), (rightX,median), thickness*fatness, buttB, buttT)
+        vertLine(boxPen, (leftX,median-height/2), (leftX,median), stroke*fatness, buttB, buttT)
+        vertLine(boxPen, (rightX,median-height/2), (rightX,median), stroke*fatness, buttB, buttT)
 
 
 def outerCorner(side, fold, fatness=1):
@@ -885,27 +885,27 @@ def outerCorner(side, fold, fatness=1):
     global median
     
     if fold == 'top':
-        median -= thickness * fatness
+        median -= stroke * fatness
     if fold == 'bottom':
-        median += thickness * fatness
+        median += stroke * fatness
 
     if side == 'right':
-        horHalfBar(side, buttL = 3*thickness)
-        x = width/2- thickness*fatness
+        horHalfBar(side, buttL = 3*stroke)
+        x = width/2- stroke*fatness
 
     if side == 'left':
-        horHalfBar(side, buttR = 3*thickness)
-        x = width/2+ thickness*fatness
+        horHalfBar(side, buttR = 3*stroke)
+        x = width/2+ stroke*fatness
 
     if fold == 'top':
-        median += thickness * fatness
+        median += stroke * fatness
     if fold == 'bottom':
-        median -= thickness * fatness
+        median -= stroke * fatness
 
     if fold == 'top':
-        vertLine(boxPen, (x,median), (x,median+height/2), thickness*fatness, buttB = 3*thickness)
+        vertLine(boxPen, (x,median), (x,median+height/2), stroke*fatness, buttB = 3*stroke)
     if fold == 'bottom':
-        vertLine(boxPen, (x,median-height/2), (x,median), thickness*fatness, buttT = 3*thickness)
+        vertLine(boxPen, (x,median-height/2), (x,median), stroke*fatness, buttT = 3*stroke)
 
 
 def innerCorner(side, fold, fatness=1):
@@ -914,29 +914,29 @@ def innerCorner(side, fold, fatness=1):
     global median
 
     if fold == 'top':
-        median += thickness * fatness
+        median += stroke * fatness
 
     if fold == 'bottom':
-        median -= thickness * fatness
+        median -= stroke * fatness
 
     if side == 'right':
-        horHalfBar(side, buttL = -1*thickness)
-        x = width/2+ thickness*fatness
+        horHalfBar(side, buttL = -1*stroke)
+        x = width/2+ stroke*fatness
 
     if side == 'left':
-        horHalfBar(side, buttR = -1*thickness)
-        x = width/2- thickness*fatness
+        horHalfBar(side, buttR = -1*stroke)
+        x = width/2- stroke*fatness
 
     if fold == 'top':
-        median -= thickness * fatness
+        median -= stroke * fatness
 
     if fold == 'bottom':
-        median += thickness * fatness
+        median += stroke * fatness
 
     if fold == 'top':
-        vertLine(boxPen, (x,median), (x,median+height/2), thickness*fatness, buttB = -1*thickness)
+        vertLine(boxPen, (x,median), (x,median+height/2), stroke*fatness, buttB = -1*stroke)
     if fold == 'bottom':
-        vertLine(boxPen, (x,median-height/2), (x,median), thickness*fatness, buttT = -1*thickness)
+        vertLine(boxPen, (x,median-height/2), (x,median), stroke*fatness, buttT = -1*stroke)
 
 
 
