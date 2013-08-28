@@ -5,9 +5,9 @@ from math import sqrt, sin, asin, radians
 
 __doc__ = '''
 
-This script will draw the range of Box Drawing Characters and Block Elements into a font file.
+This script will draw the Unicode ranges  "Box Drawing Characters" (U+2500-U+257F) and "Block Elements" (U+2580-U+259F).
 It makes use of the Robofab Python library (http://robofab.org); make sure it is installed and working.
-The script was successfully tested in RoboFont, Glyphs and FontLab.
+The script was successfully tested in RoboFont, Glyphs and FontLab. Also works on the command line.
 You can even run this script straight from the command line, given that Robofab can be imported.
 The box-drawing itself is done using combinations of simple drawing commands; listed in the long dictionary below.
 
@@ -15,11 +15,11 @@ The box-drawing itself is done using combinations of simple drawing commands; li
 
 # ----------------------------------------------------------------
 # Edit these values if you want:
-width        = 600           # Glyph width.
-height       = 1400          # Height for line elements, including overlap.
-median       = 300           # Median line.
-thickness    = 30            # General line thickness.
-fat          = 2             # Multiplication factor for drawing 'fat' lines; will multiply line thickness.
+width        = 1000          # Glyph width.
+height       = 1000          # Height for line elements, including overlap.
+median       = 380           # Median line.
+thickness    = 40            # General line thickness.
+fat          = 3             # Multiplication factor for drawing 'fat' lines; will multiply line thickness.
 radius       = width/2       # Radius for arc elements.
 blockHeight  = 1000          # Height for block elements.
 fatThickness = thickness*fat # line thickness for 'fat' lines
@@ -581,6 +581,13 @@ names = {
 }
 
 
+def floatRange(x, y, step):
+    "Variation on range(); since step values for dashed lines can sometimes be floats."
+    while x < y:
+        yield x
+        x += step
+
+
 def drawRect(pen, BL, BR, TR, TL):
     "General drawing function for a rectangle."
 
@@ -659,7 +666,7 @@ def dashedHorLine(pen, step, width=width, thickness=thickness):
 
     stepLength = width/step
     gap = stepLength/step
-    for w in range(0, width, stepLength):
+    for w in floatRange(0, width, stepLength):
         if w+stepLength-gap < width:
             w = w+gap/2 # centering the dashed line in the glyph
             horLine(boxPen, (w,median), (w+stepLength-gap,median), thickness)
@@ -670,7 +677,7 @@ def dashedVertLine(pen, step, length=blockHeight, thickness=thickness):
 
     stepLength = length/step
     gap = stepLength/step
-    for h in range(median-length/2, median+length/2, stepLength):
+    for h in floatRange(median-length/2, median+length/2, stepLength):
         if h+stepLength-gap < length:
             h = h+gap/2
             vertLine(boxPen, (width/2,h), (width/2,h+stepLength-gap), thickness)
@@ -692,8 +699,8 @@ def shade(pen, shade):
         boxWidth = 45
         boxHeight = 70
 
-    for w in range(0, width, hstep):
-        for h in range(median-blockHeight/2, median+blockHeight/2, vstep*2):
+    for w in xrange(0, width, hstep):
+        for h in xrange(median-blockHeight/2, median+blockHeight/2, vstep*2):
             box(boxPen, (w, h), (w+boxWidth, h+boxHeight))
             box(boxPen, (w+hstep/2, h+vstep), (w+boxWidth+hstep/2, h+boxHeight+vstep))
 
@@ -963,7 +970,7 @@ def stripedShade(pen, shade):
 
     xValues = []
     yValues = []
-    for w in range(0, max+line, step):
+    for w in floatRange(0, max+line, step):
         
         if proximity(w, width, line):
             xValues.append(width)
@@ -989,11 +996,11 @@ def stripedShade(pen, shade):
             yValues.append(int(round(target_y)))
 
     drawList = []
-    for step in range(0, len(xValues)-2, 2):
+    for step in xrange(0, len(xValues)-2, 2):
         xValues[step], xValues[step+1]
         drawList.append(((xValues[step], yBottom), (xValues[step+1], yBottom), (xLeft, yValues[step+1]), (xLeft, yValues[step])))
     
-    for step in range(0, len(xValues)-2, 2):
+    for step in xrange(0, len(xValues)-2, 2):
         drawList.append(((xRight, yValues[step]), (xRight, yValues[step+1]), (xValues[step+1], yTop), (xValues[step], yTop)))
 
     for i in drawList:
