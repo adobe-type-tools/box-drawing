@@ -465,12 +465,12 @@ names = {
 
     ('lightarcuprightbxd', '2570'):             ['arc(boxPen, (width/2,median+height/2), (width,median), "BL", stroke, radius, butt)'],
 
-    ('lightdiaguprightdnleftbxd', '2571'):      ['diagonalBottomUp(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), butt)'],
+    ('lightdiaguprightdnleftbxd', '2571'):      ['diagonal(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), "bottomUp")'],
 
-    ('lightdiagupleftdnrightbxd', '2572'):      ['diagonalTopDown(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), butt)'],
+    ('lightdiagupleftdnrightbxd', '2572'):      ['diagonal(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), "topDown")'],
 
-    ('lightdiagcrossbxd', '2573'):              ['diagonalTopDown(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), stroke)', 
-                                                 'diagonalBottomUp(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), stroke)'],
+    ('lightdiagcrossbxd', '2573'):              ['diagonal(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), "topDown")', 
+                                                 'diagonal(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), "bottomUp")'],
 
 
     # Half-width/Half-height:
@@ -705,53 +705,52 @@ def shade(pen, shade):
             box(boxPen, (w+hstep/2, h+vstep), (w+boxWidth+hstep/2, h+boxHeight+vstep))
 
 
-def diagonalBottomUp(pen, start, end, butt=butt): 
-    "Diagonal line from bottom left to top right."
+def diagonal(pen, start, end, direction): 
+    "Diagonal line in two possible directions; either bottomUp or topDown."
+
+    diagonalLength = math.hypot(width, blockHeight)
+    angle1 = math.asin(width/diagonalLength)
+    angle2 = math.pi/2-angle1
+    xDist = stroke/2 / math.cos(angle1)
+    yDist = stroke/2 / math.cos(angle2)
 
     startX = start[0]
     startY = start[1]
     endX = end[0]
     endY = end[1]
     
+    TL1  =  (startX+xDist,  startY)
+    TL2  =  (startX,        startY)
+    TL3  =  (startX,        startY-yDist)
+    BR1  =  (endX-xDist,    endY)
+    BR2  =  (endX,          endY)
+    BR3  =  (endX,          endY+yDist)
 
-    BL1  =  (startX,         startY+stroke)
-    BL2  =  (startX,         startY)
-    BL3  =  (startX+stroke,  startY)
-    TR1  =  (endX,           endY-stroke)
-    TR2  =  (endX,           endY)
-    TR3  =  (endX-stroke,    endY)
+    BL1  =  (startX,        startY+yDist)
+    BL2  =  (startX,        startY)
+    BL3  =  (startX+xDist,  startY)
+    TR1  =  (endX,          endY-yDist)
+    TR2  =  (endX,          endY)
+    TR3  =  (endX-xDist,    endY)
     
-    pen.moveTo(BL1) 
-    pen.lineTo(BL2)
-    pen.lineTo(BL3)
-    pen.lineTo(TR1)
-    pen.lineTo(TR2)
-    pen.lineTo(TR3)
-    pen.closePath() 
 
+    if direction == 'topDown':
+        pen.moveTo(TL1)
+        pen.lineTo(TL2)
+        pen.lineTo(TL3)
+        pen.lineTo(BR1) 
+        pen.lineTo(BR2)
+        pen.lineTo(BR3)
+        pen.closePath() 
 
-def diagonalTopDown(pen, start, end, butt=0): 
-    "Diagonal line from top left to bottom right."
-
-    startX = start[0]
-    startY = start[1]
-    endX = end[0]
-    endY = end[1]
-    
-    TL1 = (startX+stroke, startY)
-    TL2 = (startX, startY)
-    TL3 = (startX, startY-stroke)
-    BR1 = (endX-stroke, endY)
-    BR2 = (endX, endY)
-    BR3 = (endX, endY+stroke)
-
-    pen.moveTo(TL1)
-    pen.lineTo(TL2)
-    pen.lineTo(TL3)
-    pen.lineTo(BR1) 
-    pen.lineTo(BR2)
-    pen.lineTo(BR3)
-    pen.closePath() 
+    if direction == 'bottomUp':
+        pen.moveTo(BL1) 
+        pen.lineTo(BL2)
+        pen.lineTo(BL3)
+        pen.lineTo(TR1)
+        pen.lineTo(TR2)
+        pen.lineTo(TR3)
+        pen.closePath() 
 
 
 def arc(pen, start, end, side, stroke, radius, butt=0):
