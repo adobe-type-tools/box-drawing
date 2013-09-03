@@ -800,7 +800,7 @@ def arc(pen, start, end, side, stroke, radius, butt=0):
     drawArc(pen, start1, start2, end1, end2, IAstart, IApoint1, IApoint2, IAend, OAstart, OApoint1, OApoint2, OAend)
 
 
-def horBar(fatness=1, buttL=butt, buttR=butt):
+def horBar(fatness=1, median=median, buttL=butt, buttR=butt):
     "Horizontal bar."
 
     horLine(boxPen, (0,median), (width,median), stroke*fatness, buttL, buttR)
@@ -812,7 +812,7 @@ def vertBar(fatness=1, buttB=0, buttT=0):
     vertLine(boxPen, (width/2,median-height/2), (width/2,median+height/2), stroke*fatness, buttB, buttT)
 
 
-def horHalfBar(side, fatness=1, buttL=butt, buttR=butt):
+def horHalfBar(side, fatness=1, median=median, buttL=butt, buttR=butt):
     "Half-width horizontal bar, left or right."
 
     if side == 'left':
@@ -835,15 +835,11 @@ def vertHalfBar(fold, fatness=1, buttB=0, buttT=0):
 def horSplitBar(fatness=1, buttL=butt, buttR=butt):
     "Double-stroked horizontal bar, left or right."
 
-    # moving the median up and down. Not very elegant, but it works.
-    global median
-    median += stroke * fatness
-    horBar(fatness, buttL, buttR)
-    median -= stroke * fatness
-    
-    median -= stroke * fatness
-    horBar(fatness, buttL, buttR)
-    median += stroke * fatness
+    topMedian = median + stroke * fatness
+    bottomMedian = median - stroke * fatness
+
+    horBar(fatness, topMedian, buttL, buttR)
+    horBar(fatness, bottomMedian, buttL, buttR)
 
 
 def vertSplitBar(fatness=1, buttB=0, buttT=0):
@@ -858,14 +854,11 @@ def vertSplitBar(fatness=1, buttB=0, buttT=0):
 def horSplitHalfBar(side, fatness=1, buttL=butt, buttR=butt):
     "Double-stroked half-width horizontal bar, left or right."
 
-    global median
-    median += stroke * fatness
-    horHalfBar(side, fatness, buttL, buttR)
-    median -= stroke * fatness
-    
-    median -= stroke * fatness
-    horHalfBar(side, fatness, buttL, buttR)
-    median += stroke * fatness
+    topMedian = median + stroke * fatness
+    bottomMedian = median - stroke * fatness
+
+    horHalfBar(side, fatness, topMedian, buttL, buttR)
+    horHalfBar(side, fatness, bottomMedian, buttL, buttR)
 
 
 def vertSplitHalfBar(fold, fatness=1, buttB=0, buttT=0):
@@ -881,65 +874,56 @@ def vertSplitHalfBar(fold, fatness=1, buttB=0, buttT=0):
         vertLine(boxPen, (rightX,median-height/2), (rightX,median), stroke*fatness, buttB, buttT)
 
 
-def outerCorner(side, fold, fatness=1):
+def outerCorner(side, fold, fatness=1, cornerMedian=median):
     "Outer part of a double-stroked corner."
 
-    global median
-    
     if fold == 'top':
-        median -= stroke * fatness
+        cornerMedian -= stroke * fatness
     if fold == 'bottom':
-        median += stroke * fatness
+        cornerMedian += stroke * fatness
 
     if side == 'right':
-        horHalfBar(side, buttL=3*stroke, buttR=butt)
+        horHalfBar(side, median=cornerMedian, buttL=3*stroke, buttR=butt)
         x = width/2- stroke*fatness
-
     if side == 'left':
-        horHalfBar(side, buttL=butt, buttR=3*stroke)
+        horHalfBar(side, median=cornerMedian, buttL=butt, buttR=3*stroke)
         x = width/2+ stroke*fatness
 
     if fold == 'top':
-        median += stroke * fatness
+        cornerMedian += stroke * fatness
     if fold == 'bottom':
-        median -= stroke * fatness
+        cornerMedian -= stroke * fatness
 
     if fold == 'top':
-        vertLine(boxPen, (x,median), (x,median+height/2), stroke*fatness, buttB = 3*stroke)
+        vertLine(boxPen, (x,cornerMedian), (x,cornerMedian+height/2), stroke*fatness, buttB = 3*stroke)
     if fold == 'bottom':
-        vertLine(boxPen, (x,median-height/2), (x,median), stroke*fatness, buttT = 3*stroke)
+        vertLine(boxPen, (x,cornerMedian-height/2), (x,cornerMedian), stroke*fatness, buttT = 3*stroke)
 
 
-def innerCorner(side, fold, fatness=1):
+def innerCorner(side, fold, fatness=1, cornerMedian=median):
     "Inner part of a double-stroked corner."
     
-    global median
-
     if fold == 'top':
-        median += stroke * fatness
-
+        cornerMedian += stroke * fatness
     if fold == 'bottom':
-        median -= stroke * fatness
+        cornerMedian -= stroke * fatness
 
     if side == 'right':
-        horHalfBar(side, buttL=-1*stroke, buttR=butt)
+        horHalfBar(side, median=cornerMedian, buttL=-1*stroke, buttR=butt)
         x = width/2+ stroke*fatness
-
     if side == 'left':
-        horHalfBar(side, buttL=butt, buttR=-1*stroke)
+        horHalfBar(side, median=cornerMedian, buttL=butt, buttR=-1*stroke)
         x = width/2- stroke*fatness
 
     if fold == 'top':
-        median -= stroke * fatness
-
+        cornerMedian -= stroke * fatness
     if fold == 'bottom':
-        median += stroke * fatness
+        cornerMedian += stroke * fatness
 
     if fold == 'top':
-        vertLine(boxPen, (x,median), (x,median+height/2), stroke*fatness, buttB = -1*stroke)
+        vertLine(boxPen, (x,cornerMedian), (x,cornerMedian+height/2), stroke*fatness, buttB = -1*stroke)
     if fold == 'bottom':
-        vertLine(boxPen, (x,median-height/2), (x,median), stroke*fatness, buttT = -1*stroke)
-
+        vertLine(boxPen, (x,cornerMedian-height/2), (x,cornerMedian), stroke*fatness, buttT = -1*stroke)
 
 
 def proximity(x, value, dist):
