@@ -677,9 +677,11 @@ def dashedVertLine(pen, step, length=blockHeight, stroke=stroke):
 
     stepLength = length/step
     gap = stepLength/step
+    top = median+blockHeight/2
+
     for h in floatRange(median-length/2, median+length/2, stepLength):
-        if h+stepLength-gap < length:
-            h = h+gap/2
+        if h+stepLength-gap < top:
+            h += gap/2
             vertLine(boxPen, (width/2,h), (width/2,h+stepLength-gap), stroke)
 
 
