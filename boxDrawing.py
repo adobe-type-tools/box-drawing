@@ -42,7 +42,7 @@ inShell = False
 
 if not any((inRF, inFL, inGlyphs)):
     try:
-        import RoboFont
+        import mojo.roboFont
         inRF = True
     except ImportError:
         pass
