@@ -131,6 +131,6 @@ __Alternate method:__
 [fontlab]: http://www.fontlab.com/font-editor/fontlab-studio/
 [robofab]: http://robofab.org/
 [ufo]: http://unifiedfontobject.org/
-[Project Page]: http://adobe-type-tools.github.com/boxDrawing/
+[Project Page]: http://adobe-type-tools.github.io/box-drawing/
 [objectsGS.py]: https://github.com/schriftgestalt/Glyphs-Scripts/blob/master/objectsGS.py
 [GSpen.py]: https://github.com/schriftgestalt/Glyphs-Scripts/blob/master/GSPen.py
