@@ -4,11 +4,13 @@ import math
 
 __doc__ = '''
 
-This script will draw the Unicode ranges  "Box Drawing Characters" (U+2500-U+257F) and "Block Elements" (U+2580-U+259F).
-It makes use of the Robofab Python library (http://robofab.org); make sure it is installed and working.
-The script was successfully tested in RoboFont, Glyphs and FontLab. Also works on the command line.
-You can even run this script straight from the command line, given that Robofab can be imported.
-The box-drawing itself is done using combinations of simple drawing commands; listed in the long dictionary below.
+This script will draw the Unicode ranges "Box Drawing Characters" (U+2500 to
+U+257F) and "Block Elements" (U+2580 to U+259F). It makes use of the Robofab
+Python library (https://github.com/robofab-developers/robofab).
+The script was successfully tested in RoboFont, Glyphs and FontLab.
+It is possible to run this script straight from the command line, given that
+Robofab can be imported. The box-drawing itself is done using combinations
+of simple drawing commands; listed in the long dictionary below.
 
 '''
 
@@ -86,7 +88,7 @@ if inGlyphs:
         raise AttributeError("Please update your objectsGS.py file. Download the latest verion at: https://github.com/schriftgestalt/Glyphs-Scripts")
 
 
-# Check if a font is open, if not create a new one.
+# Check if a font is open -- if not, create a new one.
 
 f = CurrentFont()
 
@@ -469,7 +471,7 @@ names = {
 
     ('lightdiagupleftdnrightbxd', '2572'):      ['diagonal(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), "topDown")'],
 
-    ('lightdiagcrossbxd', '2573'):              ['diagonal(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), "topDown")', 
+    ('lightdiagcrossbxd', '2573'):              ['diagonal(boxPen, (0,median+blockHeight/2), (width,median-blockHeight/2), "topDown")',
                                                  'diagonal(boxPen, (0,median-blockHeight/2), (width,median+blockHeight/2), "bottomUp")'],
 
 
@@ -558,24 +560,24 @@ names = {
 
     ('upleftquadrant', '2598'):                 ['box(boxPen, start=(blockOrigin[0], median), end=(width*1/2, blockTop[1]))'],
 
-    ('upleftdnleftdnrightquadrant', '2599'):    ['box(boxPen, end=(width*1/2, blockTop[1]))', 
+    ('upleftdnleftdnrightquadrant', '2599'):    ['box(boxPen, end=(width*1/2, blockTop[1]))',
                                                  'box(boxPen, end=(width, blockOrigin[1]+blockHeight*1/2))'],
 
     ('upleftdnrightquadrant', '259A'):          ['box(boxPen, start=(width/2, blockOrigin[1]), end=(blockTop[0], median))',
                                                  'box(boxPen, start=(blockOrigin[0], median), end=(width*1/2, blockTop[1]))'],
 
-    ('upleftuprightdnleftquadrant', '259B'):    ['box(boxPen, end=(width*1/2, blockTop[1]))', 
+    ('upleftuprightdnleftquadrant', '259B'):    ['box(boxPen, end=(width*1/2, blockTop[1]))',
                                                  'box(boxPen, start=(blockOrigin[0], median))'],
 
-    ('upleftuprightdnrightquadrant', '259C'):   ['box(boxPen, start=(width/2, blockOrigin[1]))', 
+    ('upleftuprightdnrightquadrant', '259C'):   ['box(boxPen, start=(width/2, blockOrigin[1]))',
                                                  'box(boxPen, start=(blockOrigin[0], median))'],
 
     ('uprightquadrant', '259D'):                ['box(boxPen, start=(width/2, median))'],
 
-    ('uprightdnleftquadrant', '259E'):          ['box(boxPen, end=(width*1/2, blockOrigin[1]+blockHeight*1/2))', 
+    ('uprightdnleftquadrant', '259E'):          ['box(boxPen, end=(width*1/2, blockOrigin[1]+blockHeight*1/2))',
                                                  'box(boxPen, start=(width/2, median))'],
 
-    ('uprightdnleftdnrightquadrant', '259F'):   ['box(boxPen, start=(width/2, blockOrigin[1]))', 
+    ('uprightdnleftdnrightquadrant', '259F'):   ['box(boxPen, start=(width/2, blockOrigin[1]))',
                                                  'box(boxPen, end=(width, blockOrigin[1]+blockHeight*1/2))'],
 
 }
@@ -591,29 +593,29 @@ def floatRange(x, y, step):
 def drawRect(pen, BL, BR, TR, TL):
     "General drawing function for a rectangle."
 
-    pen.moveTo(BL) 
+    pen.moveTo(BL)
     pen.lineTo(BR)
     pen.lineTo(TR)
     pen.lineTo(TL)
-    pen.closePath() 
+    pen.closePath()
 
 
 def drawArc(pen, start1, start2, end1, end2, IAstart, IApoint1, IApoint2, IAend, OAstart, OApoint1, OApoint2, OAend):
     "General drawing function for an arc."
 
     pen.moveTo(start1)
-    pen.lineTo(start2) 
-    pen.lineTo(IAstart) 
-    pen.curveTo(IApoint1, IApoint2, IAend) 
+    pen.lineTo(start2)
+    pen.lineTo(IAstart)
+    pen.curveTo(IApoint1, IApoint2, IAend)
     pen.lineTo(end1)
     pen.lineTo(end2)
-    pen.lineTo(OAstart) 
+    pen.lineTo(OAstart)
     pen.curveTo(OApoint1, OApoint2, OAend)
 
-    pen.closePath() 
+    pen.closePath()
 
 
-def horLine(pen, start, end, stroke, buttL=butt, buttR=butt): 
+def horLine(pen, start, end, stroke, buttL=butt, buttR=butt):
     "General drawing function for a horizontal line."
 
     startX = start[0]
@@ -621,26 +623,26 @@ def horLine(pen, start, end, stroke, buttL=butt, buttR=butt):
     endX = end[0]
     endY = end[1]
 
-    BL = (startX-buttL/2, endY-stroke/2)
-    BR = (endX+buttR/2,   endY-stroke/2)
-    TR = (endX+buttR/2,   endY+stroke/2)
-    TL = (startX-buttL/2, startY+stroke/2)
+    BL = (startX - buttL / 2, endY - stroke / 2)
+    BR = (endX + buttR / 2, endY - stroke / 2)
+    TR = (endX + buttR / 2, endY + stroke / 2)
+    TL = (startX - buttL / 2, startY + stroke / 2)
 
     drawRect(pen, BL, BR, TR, TL)
 
 
-def vertLine(pen, start, end, stroke, buttB=0, buttT=0): 
+def vertLine(pen, start, end, stroke, buttB=0, buttT=0):
     "General drawing function for a vertical line."
 
     startX = start[0]
     startY = start[1]
     endX = end[0]
     endY = end[1]
-        
-    BL = (startX-stroke/2, startY-buttB/2)
-    BR = (startX+stroke/2, startY-buttB/2)
-    TR = (startX+stroke/2, endY+buttT/2)
-    TL = (startX-stroke/2, endY+buttT/2)
+
+    BL = (startX - stroke / 2, startY - buttB / 2)
+    BR = (startX + stroke / 2, startY - buttB / 2)
+    TR = (startX + stroke / 2, endY + buttT / 2)
+    TL = (startX - stroke / 2, endY + buttT / 2)
 
     drawRect(pen, BL, BR, TR, TL)
 
@@ -652,7 +654,7 @@ def box(pen, start=blockOrigin, end=blockTop):
     startY = start[1]
     endX = end[0]
     endY = end[1]
-    
+
     BL = (startX, startY)
     BR = (endX,   startY)
     TR = (endX,   endY)
@@ -707,20 +709,20 @@ def shade(pen, shade):
             box(boxPen, (w+hstep/2, h+vstep), (w+boxWidth+hstep/2, h+boxHeight+vstep))
 
 
-def diagonal(pen, start, end, direction): 
+def diagonal(pen, start, end, direction):
     "Diagonal line in two possible directions; either bottomUp or topDown."
 
     diagonalLength = math.hypot(width, blockHeight)
-    angle1 = math.asin(width/diagonalLength)
-    angle2 = math.pi/2-angle1
-    xDist = stroke/2 / math.cos(angle1)
-    yDist = stroke/2 / math.cos(angle2)
+    angle1 = math.asin(width / diagonalLength)
+    angle2 = math.pi / 2 - angle1
+    xDist = stroke / 2 / math.cos(angle1)
+    yDist = stroke / 2 / math.cos(angle2)
 
     startX = start[0]
     startY = start[1]
     endX = end[0]
     endY = end[1]
-    
+
     TL1  =  (startX+xDist,  startY)
     TL2  =  (startX,        startY)
     TL3  =  (startX,        startY-yDist)
@@ -734,33 +736,33 @@ def diagonal(pen, start, end, direction):
     TR1  =  (endX,          endY-yDist)
     TR2  =  (endX,          endY)
     TR3  =  (endX-xDist,    endY)
-    
+
 
     if direction == 'topDown':
         pen.moveTo(TL1)
         pen.lineTo(TL2)
         pen.lineTo(TL3)
-        pen.lineTo(BR1) 
+        pen.lineTo(BR1)
         pen.lineTo(BR2)
         pen.lineTo(BR3)
-        pen.closePath() 
+        pen.closePath()
 
     if direction == 'bottomUp':
-        pen.moveTo(BL1) 
+        pen.moveTo(BL1)
         pen.lineTo(BL2)
         pen.lineTo(BL3)
         pen.lineTo(TR1)
         pen.lineTo(TR2)
         pen.lineTo(TR3)
-        pen.closePath() 
+        pen.closePath()
 
 
 def arc(pen, start, end, side, stroke, radius, butt=0):
     "Rounded corner."
-    
-    kappa = 4*(math.sqrt(2)-1)/3
+
+    kappa = 4 * (math.sqrt(2) - 1) / 3
     # Bezier point distance for drawing circles.
-    
+
     if side == 'TL':
         yflip =  1
         xflip =  1
@@ -773,7 +775,7 @@ def arc(pen, start, end, side, stroke, radius, butt=0):
     if side == 'BR':
         yflip = -1
         xflip = -1
-    
+
     startX = start[0]
     startY = start[1]
     endX = end[0]
@@ -788,7 +790,7 @@ def arc(pen, start, end, side, stroke, radius, butt=0):
     start2 = (startX+(stroke/2*xflip), startY)
     end1   = (endX+(butt/2*xflip), endY-(stroke/2*yflip))
     end2   = (endX+(butt/2*xflip), endY+(stroke/2*yflip))
-    
+
     IAstart  = (cStartX+(stroke/2*xflip),cStartY)
     IApoint1 = (cStartX+(stroke/2*xflip),cStartY+((radius-stroke/2)*kappa*yflip))
     IApoint2 = (cEndX-((radius-stroke/2)*kappa*xflip),cEndY-(stroke/2*yflip))
@@ -827,12 +829,12 @@ def horHalfBar(side, fatness=1, median=median, buttL=butt, buttR=butt):
 
 def vertHalfBar(fold, fatness=1, buttB=0, buttT=0):
     "Half-height vertical bar, top or bottom."
-    
+
     if fold == 'top':
         vertLine(boxPen, (width/2,median), (width/2,median+height/2), stroke*fatness, buttB, buttT)
     if fold == 'bottom':
         vertLine(boxPen, (width/2,median-height/2), (width/2,median), stroke*fatness, buttB, buttT)
-        
+
 
 def horSplitBar(fatness=1, buttL=butt, buttR=butt):
     "Double-stroked horizontal bar, left or right."
@@ -904,7 +906,7 @@ def outerCorner(side, fold, fatness=1, cornerMedian=median):
 
 def innerCorner(side, fold, fatness=1, cornerMedian=median):
     "Inner part of a double-stroked corner."
-    
+
     if fold == 'top':
         cornerMedian += stroke * fatness
     if fold == 'bottom':
@@ -929,8 +931,9 @@ def innerCorner(side, fold, fatness=1, cornerMedian=median):
 
 
 def proximity(x, value, dist):
-    # checks if a given value is close to another value (used for hatched shades)
-    if x > value-dist:
+    # checks if a given value is close to another value
+    # (used for hatched shades)
+    if x > value - dist:
         return True
     else:
         return False
@@ -939,8 +942,9 @@ def proximity(x, value, dist):
 def stripedShade(pen, shade):
     "Shading patterns, consisting of diagonal lines boxes."
 
-    # This function assumes a bunch of right triangles being moved across the width of the glyph.
-    # Below, the law of sines is used for start-and endpoint calculations.
+    # This function assumes a bunch of right triangles being moved across
+    # the width of the glyph. Below, the law of sines is used for start-
+    # and endpoint calculations.
 
     if shade == '25':
         step = width/2
@@ -954,19 +958,20 @@ def stripedShade(pen, shade):
     angle = math.asin(blockHeight/diagonal)
 
     max = width
-    # To determine where the iteration below can stop, this is the point where the first diagonal line outside the glyph will cross the given baseline.
+    # To determine where the iteration below can stop, this is the point where
+    # the first diagonal line outside the glyph will cross the given baseline.
 
     xValues = []
     yValues = []
     for w in floatRange(0, max+line, step):
-        
+
         if proximity(w, width, line):
             xValues.append(width)
         else:
             xValues.append(w)
 
         if proximity(w+line, width, line):
-            xValues.append(width)    
+            xValues.append(width)
         else:
             xValues.append(w+line)
 
@@ -987,7 +992,7 @@ def stripedShade(pen, shade):
     for step in xrange(0, len(xValues)-2, 2):
         xValues[step], xValues[step+1]
         drawList.append(((xValues[step], yBottom), (xValues[step+1], yBottom), (xLeft, yValues[step+1]), (xLeft, yValues[step])))
-    
+
     for step in xrange(0, len(xValues)-2, 2):
         drawList.append(((xRight, yValues[step]), (xRight, yValues[step+1]), (xValues[step+1], yTop), (xValues[step], yTop)))
 
@@ -1002,7 +1007,7 @@ def stripedShade(pen, shade):
 
 # The main job is done here:
 
-if f != None:
+if f is not None:
     print 'Drawing boxes ...'
 
     generatedGlyphs = []
@@ -1013,7 +1018,7 @@ if f != None:
         generatedGlyphs.append(name)
         commands = names[name, uni]
         print name
-        
+
         g = f.newGlyph(name, clear=True)
         g.width = width
         boxPen = g.getPen()
@@ -1023,10 +1028,10 @@ if f != None:
         if not inShell:
             g.removeOverlap()
             g.correctDirection()
-        
+
         g.unicode = int(uni, 16)
         g.update()
-        
+
     f.update()
 
     if inShell:
@@ -1041,14 +1046,14 @@ if f != None:
         fl.UpdateFont(fl.ifont)
 
     if inRF:
-        # Modifying the glyph order, so it looks like the glyphs have been appended at the end of the font.
+        # Modifying the glyph order, so it looks like the glyphs
+        # have been appended at the end of the font.
         oldGlyphOrder = [ g for g in f.lib['public.glyphOrder'] if g not in generatedGlyphs ]
-        newGlyphOrder = oldGlyphOrder + generatedGlyphs 
+        newGlyphOrder = oldGlyphOrder + generatedGlyphs
         f.glyphOrder = newGlyphOrder
         f.lib['public.glyphOrder'] = newGlyphOrder
-    
+
     if inGlyphs:
         f._object.font.enableUpdateInterface()
-    
+
     print '\nDone.'
-        
