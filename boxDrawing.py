@@ -583,8 +583,12 @@ names = {
 }
 
 
+def roundInt(float):
+    return int(round(float))
+
+
 def floatRange(x, y, step):
-    "Variation on range(); since step values for dashed lines can sometimes be floats."
+    "Variation on range(), since step values for dashed lines may be floats."
     while x < y:
         yield x
         x += step
@@ -598,6 +602,19 @@ def drawRect(pen, BL, BR, TR, TL):
     pen.lineTo(TR)
     pen.lineTo(TL)
     pen.closePath()
+
+
+def drawPoly(pen, *coords):
+    "General drawing function for a polygon."
+
+    if len(set(coords)) >= 3:
+        pen.moveTo(coords[0])
+        for pointIndex, pointCoords in enumerate(coords):
+            # print pointCoords
+            if pointIndex > 0:
+                if not pointCoords == coords[pointIndex-1]:
+                    pen.lineTo(pointCoords)
+        pen.closePath()
 
 
 def drawArc(pen, start1, start2, end1, end2, IAstart, IApoint1, IApoint2, IAend, OAstart, OApoint1, OApoint2, OAend):
@@ -930,79 +947,96 @@ def innerCorner(side, fold, fatness=1, cornerMedian=median):
         vertLine(boxPen, (x,cornerMedian-height/2), (x,cornerMedian), stroke*fatness, buttT = -1*stroke)
 
 
-def proximity(x, value, dist):
-    # checks if a given value is close to another value
-    # (used for hatched shades)
-    if x > value - dist:
-        return True
-    else:
-        return False
+def shiftCoords(coordList, xShift=0, yShift=0):
+    return [(x+xShift, y+yShift) for (x, y) in coordList]
 
 
 def stripedShade(pen, shade):
-    "Shading patterns, consisting of diagonal lines boxes."
+    "Shading patterns, consisting of diagonal lines."
 
     # This function assumes a bunch of right triangles being moved across
     # the width of the glyph. Below, the law of sines is used for start-
     # and endpoint calculations.
 
     if shade == '25':
-        step = width/2
+        step = width / 3
     if shade == '50':
-        step = width/4
+        step = width / 6
     if shade == '75':
-        step = width/8
+        step = width / 12
 
-    line = width/20
-    diagonal = math.sqrt(width**2+blockHeight**2)
-    angle = math.asin(blockHeight/diagonal)
+    stroke = width / 30
+    angle = math.asin(2 / math.hypot(1, 2))  # 1 : 2 ratio
+    # angle = math.radians(45)  # 1 : 1 ratio
 
-    max = width
-    # To determine where the iteration below can stop, this is the point where
-    # the first diagonal line outside the glyph will cross the given baseline.
+    yShift = median - blockHeight/2
+    hypotenuse = blockHeight / math.sin(angle)
+
+    y_bot = blockOrigin[1]
+    y_top = blockOrigin[1] + blockHeight
+    x_left = 0
+    x_rght = width
+
+    # leftmost point:
+    leftmost_x = 0 - math.cos(angle) * hypotenuse - stroke
 
     xValues = []
     yValues = []
-    for w in floatRange(0, max+line, step):
 
-        if proximity(w, width, line):
-            xValues.append(width)
-        else:
-            xValues.append(w)
-
-        if proximity(w+line, width, line):
-            xValues.append(width)
-        else:
-            xValues.append(w+line)
-
-    yBottom = blockOrigin[1]
-    yTop = blockOrigin[1] + blockHeight
-    xLeft = 0
-    xRight = width
-
-    for v in xValues:
-        target_y = yBottom + (v * math.sin(angle))/math.sin(math.radians(90)-angle)
-
-        if proximity(v, yTop, line):
-            yValues.append(int(round(target_y)))
-        else:
-            yValues.append(int(round(target_y)))
+    for xValue in floatRange(leftmost_x, width+stroke, step):
+        xValues.append(xValue)
+        xValues.append(xValue + stroke)
 
     drawList = []
-    for step in xrange(0, len(xValues)-2, 2):
-        xValues[step], xValues[step+1]
-        drawList.append(((xValues[step], yBottom), (xValues[step+1], yBottom), (xLeft, yValues[step+1]), (xLeft, yValues[step])))
 
-    for step in xrange(0, len(xValues)-2, 2):
-        drawList.append(((xRight, yValues[step]), (xRight, yValues[step+1]), (xValues[step+1], yTop), (xValues[step], yTop)))
+    for (raw_x1, raw_x2) in zip(xValues[:-1:2],xValues[1::2]):
+        bot_x1 = roundInt(raw_x1)
+        bot_x2 = roundInt(raw_x2)
+        top_x1 = roundInt(raw_x1 + hypotenuse * math.cos(angle))
+        top_x2 = roundInt(raw_x2 + hypotenuse * math.cos(angle))
 
-    for i in drawList:
-        BL = i[0]
-        BR = i[1]
-        TR = i[2]
-        TL = i[3]
+        bot_y1 = 0
+        bot_y2 = 0
+        top_y1 = blockHeight
+        top_y2 = blockHeight
 
-        drawRect(pen, BL, BR, TR, TL)
+        if bot_x1 <= 0:
+            bot_x1 = 0
+            bot_y1 = roundInt(math.tan(angle) * abs(raw_x1))
+
+        if bot_x2 <= 0:
+            bot_x2 = 0
+            bot_y2 = roundInt(math.tan(angle) * abs(raw_x2))
+
+        if top_x1 >= width:
+            top_x1 = width
+            top_y1 = roundInt(math.tan(angle) * abs(raw_x1 - width))
+
+        if top_x2 >= width:
+            top_x2 = width
+            top_y2 = roundInt(math.tan(angle) * abs(raw_x2 - width))
+
+        if top_y1 <= bot_y1:
+            top_y1 = bot_y1 = blockHeight
+
+        if top_x1 <= bot_x1:
+            top_x1 = bot_x1 = width
+
+        if bot_x2 >= width:
+            bot_x2 = width
+            top_y2 = 0
+
+
+        stripe = ((bot_x1, bot_y1),
+            (bot_x2, bot_y2),
+            (top_x2, top_y2),
+            (top_x1, top_y1),
+            )
+
+        drawList.append(shiftCoords(stripe, 0, yShift))
+
+    for (BL, BR, TR, TL) in drawList:
+        drawPoly(pen, BL, BR, TR, TL)
 
 
 # The main job is done here:
