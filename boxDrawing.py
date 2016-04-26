@@ -15,14 +15,14 @@ of simple drawing commands; listed in the long dictionary below.
 '''
 
 # ----------------------------------------------------------------
-# Edit these values if you want:
-width        = 1000          # Glyph width.
-height       = 1000          # Height for line elements, including overlap.
+# Edit these values if you want (currently set to match Source Code Pro):
+width        = 600           # Glyph width.
+height       = 1400          # Height for line elements, including overlap.
 median       = 500           # Median line.
 stroke       = 40            # General stroke weight.
 fat          = 3             # Multiplication factor for drawing 'fat' lines; will multiply stroke weight.
 radius       = width/2       # Radius for arc elements.
-blockHeight  = 1000          # Height for block elements.
+blockHeight  = 1400          # Height for block elements.
 fatStroke    = stroke*fat    # Stroke thickness for 'fat' lines.
 butt         = stroke*2      # Horizontal overlap.
 
