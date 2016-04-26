@@ -18,13 +18,13 @@ of simple drawing commands; listed in the long dictionary below.
 # Edit these values if you want (currently set to match Source Code Pro):
 width        = 600           # Glyph width.
 height       = 1400          # Height for line elements, including overlap.
-median       = 500           # Median line.
-stroke       = 40            # General stroke weight.
-fat          = 3             # Multiplication factor for drawing 'fat' lines; will multiply stroke weight.
+median       = 300           # Median line.
+stroke       = 30            # General stroke weight.
+fat          = 2             # Multiplication factor for drawing 'fat' lines; will multiply stroke weight.
 radius       = width/2       # Radius for arc elements.
 blockHeight  = 1400          # Height for block elements.
 fatStroke    = stroke*fat    # Stroke thickness for 'fat' lines.
-butt         = stroke*2      # Horizontal overlap.
+butt         = stroke      # Horizontal overlap.
 
 # Those following values are for block elements, and are dependent of the values above.
 blockOrigin = (0,median-blockHeight/2)
@@ -966,8 +966,8 @@ def stripedShade(pen, shade):
         step = width / 12
 
     stroke = width / 30
-    angle = math.asin(2 / math.hypot(1, 2))  # 1 : 2 ratio
-    # angle = math.radians(45)  # 1 : 1 ratio
+    # angle = math.asin(2 / math.hypot(1, 2))  # 1 : 2 ratio
+    angle = math.radians(45)  # 1 : 1 ratio
 
     yShift = median - blockHeight/2
     hypotenuse = blockHeight / math.sin(angle)
