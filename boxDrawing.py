@@ -24,7 +24,7 @@ FAT = 2                    # Multiplication factor for drawing 'fat' strokes.
 RADIUS = WIDTH / 2         # Radius for arc elements.
 BLOCK_HEIGHT = 1200        # Height for block elements.
 FAT_STROKE = STROKE * FAT  # STROKE thickness for 'fat' lines.
-BUTT = STROKE * 2          # Horizontal overlap.
+BUTT = STROKE              # Horizontal overlap.
 
 # Those following values are for block elements,
 # and are dependent of the values above:
@@ -911,7 +911,7 @@ def horHalfBar(side, fatness=1, median=MEDIAN, buttL=BUTT, buttR=BUTT):
     "Halfwidth horizontal bar, left or right."
 
     if side == 'left':
-        if buttR == BUTT:
+        if buttR == BUTT != STROKE:
             buttR = 0
         horLine(
             boxPen,
@@ -921,7 +921,7 @@ def horHalfBar(side, fatness=1, median=MEDIAN, buttL=BUTT, buttR=BUTT):
             buttL, buttR
         )
     elif side == 'right':
-        if buttL == BUTT:
+        if buttL == BUTT != STROKE:
             buttL = 0
         horLine(
             boxPen,
