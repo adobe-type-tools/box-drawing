@@ -16,24 +16,24 @@ of simple drawing commands; listed in the long dictionary below.
 
 # ----------------------------------------------------------------
 # Edit these values if you want (currently set to match Source Code Pro):
-WIDTH        = 600           # Glyph width.
-HEIGHT       = 1400          # Height for line elements, including overlap.
-MEDIAN       = 300           # Median line.
-STROKE       = 160           # General stroke weight.
-FAT          = 2             # Multiplication factor for drawing 'fat' strokes.
-RADIUS       = WIDTH/2       # Radius for arc elements.
-BLOCK_HEIGHT = 1200          # Height for block elements.
-FAT_STROKE   = STROKE*FAT    # STROKE thickness for 'fat' lines.
-BUTT         = STROKE*4      # Horizontal overlap.
+WIDTH = 600                # Glyph width.
+HEIGHT = 1400              # Height for line elements, including overlap.
+MEDIAN = 300               # Median line.
+STROKE = 160               # General stroke weight.
+FAT = 2                    # Multiplication factor for drawing 'fat' strokes.
+RADIUS = WIDTH / 2         # Radius for arc elements.
+BLOCK_HEIGHT = 1200        # Height for block elements.
+FAT_STROKE = STROKE * FAT  # STROKE thickness for 'fat' lines.
+BUTT = STROKE * 2          # Horizontal overlap.
 
-# Those following values are for block elements, and are dependent of the values above.
-BLOCK_ORIGIN = (0,MEDIAN-BLOCK_HEIGHT/2)
-BLOCK_TOP = (WIDTH,MEDIAN+BLOCK_HEIGHT/2)
+# Those following values are for block elements,
+# and are dependent of the values above:
+BLOCK_ORIGIN = (0, MEDIAN - BLOCK_HEIGHT / 2)
+BLOCK_TOP = (WIDTH, MEDIAN + BLOCK_HEIGHT / 2)
 
 
 # Nothing below here _needs_ to be edited, but feel free to do so:
 # ----------------------------------------------------------------
-
 
 # Checking which application we are in:
 
@@ -77,15 +77,20 @@ if inGlyphs:
         import objectsGS, GSPen
     except ImportError:
         print '''
-        The files GSPen.py and objectsGS.py are needed for Robofab to be working in Glyphs.
-        Please get them at https://github.com/schriftgestalt/Glyphs-Scripts
+        The files GSPen.py and objectsGS.py are needed for
+        Robofab to work in Glyphs. Please get them at
+        https://github.com/schriftgestalt/Glyphs-Scripts
         '''
     try:
         test = getattr(GSLayer, "removeOverlap")
         if not callable(test):
             raise
     except:
-        raise AttributeError("Please update your objectsGS.py file. Download the latest verion at: https://github.com/schriftgestalt/Glyphs-Scripts")
+        raise AttributeError(
+            '''\
+            Please update your objectsGS.py file.
+            Download the latest verion at:
+            https://github.com/schriftgestalt/Glyphs-Scripts''')
 
 
 # Check if a font is open -- if not, create a new one.
@@ -619,12 +624,16 @@ def drawPoly(pen, *coords):
         for pointIndex, pointCoords in enumerate(coords):
             # print pointCoords
             if pointIndex > 0:
-                if not pointCoords == coords[pointIndex-1]:
+                if not pointCoords == coords[pointIndex - 1]:
                     pen.lineTo(pointCoords)
         pen.closePath()
 
 
-def drawArc(pen, start1, start2, end1, end2, IAstart, IApoint1, IApoint2, IAend, OAstart, OApoint1, OApoint2, OAend):
+def drawArc(
+    pen, start1, start2, end1, end2,
+    IAstart, IApoint1, IApoint2, IAend,
+    OAstart, OApoint1, OApoint2, OAend
+):
     "General drawing function for an arc."
 
     pen.moveTo(start1)
@@ -660,7 +669,6 @@ def vertLine(pen, start, end, stroke, buttB=0, buttT=0):
 
     startX = start[0]
     startY = start[1]
-    endX = end[0]
     endY = end[1]
 
     BL = (startX - stroke / 2, startY - buttB / 2)
@@ -680,8 +688,8 @@ def box(pen, start=BLOCK_ORIGIN, end=BLOCK_TOP):
     endY = end[1]
 
     BL = (startX, startY)
-    BR = (endX,   startY)
-    TR = (endX,   endY)
+    BR = (endX, startY)
+    TR = (endX, endY)
     TL = (startX, endY)
 
     drawRect(pen, BL, BR, TR, TL)
@@ -690,25 +698,37 @@ def box(pen, start=BLOCK_ORIGIN, end=BLOCK_TOP):
 def dashedHorLine(pen, step, width=WIDTH, stroke=STROKE):
     "Dashed horizontal bar."
 
-    stepLength = width/step
-    gap = stepLength/step
+    stepLength = width / step
+    gap = stepLength / step
     for w in floatRange(0, width, stepLength):
-        if w+stepLength-gap < width:
-            w = w+gap/2 # centering the dashed line in the glyph
-            horLine(boxPen, (w,MEDIAN), (w+stepLength-gap,MEDIAN), stroke, buttL=0, buttR=0)
+        if w + stepLength - gap < width:
+            w = w + gap / 2  # centering the dashed line in the glyph
+            horLine(
+                boxPen,
+                (w, MEDIAN),
+                (w + stepLength - gap, MEDIAN),
+                stroke,
+                buttL=0,
+                buttR=0
+            )
 
 
 def dashedVertLine(pen, step, length=BLOCK_HEIGHT, stroke=STROKE):
     "Dashed vertical bar."
 
-    stepLength = length/step
-    gap = stepLength/step
-    top = MEDIAN+BLOCK_HEIGHT/2
+    stepLength = length / step
+    gap = stepLength / step
+    top = MEDIAN + BLOCK_HEIGHT / 2
 
-    for h in floatRange(MEDIAN-length/2, MEDIAN+length/2, stepLength):
-        if h+stepLength-gap < top:
-            h += gap/2
-            vertLine(boxPen, (WIDTH/2,h), (WIDTH/2,h+stepLength-gap), stroke)
+    for h in floatRange(MEDIAN - length / 2, MEDIAN + length / 2, stepLength):
+        if h + stepLength - gap < top:
+            h += gap / 2
+            vertLine(
+                boxPen,
+                (WIDTH / 2, h),
+                (WIDTH / 2, h + stepLength - gap),
+                stroke
+            )
 
 
 def shade(pen, shade):
@@ -728,9 +748,21 @@ def shade(pen, shade):
         boxHeight = 70
 
     for w in xrange(0, WIDTH, hstep):
-        for h in xrange(MEDIAN-BLOCK_HEIGHT/2, MEDIAN+BLOCK_HEIGHT/2, vstep*2):
-            box(boxPen, (w, h), (w+boxWidth, h+boxHeight))
-            box(boxPen, (w+hstep/2, h+vstep), (w+boxWidth+hstep/2, h+boxHeight+vstep))
+        for h in xrange(
+            MEDIAN - BLOCK_HEIGHT / 2,
+            MEDIAN + BLOCK_HEIGHT / 2,
+            vstep * 2
+        ):
+            box(
+                boxPen,
+                (w, h),
+                (w + boxWidth, h + boxHeight)
+            )
+            box(
+                boxPen,
+                (w + hstep / 2, h + vstep),
+                (w + boxWidth + hstep / 2, h + boxHeight + vstep)
+            )
 
 
 def diagonal(pen, start, end, direction):
@@ -747,20 +779,19 @@ def diagonal(pen, start, end, direction):
     endX = end[0]
     endY = end[1]
 
-    TL1  =  (startX+xDist,  startY)
-    TL2  =  (startX,        startY)
-    TL3  =  (startX,        startY-yDist)
-    BR1  =  (endX-xDist,    endY)
-    BR2  =  (endX,          endY)
-    BR3  =  (endX,          endY+yDist)
+    TL1 = (startX + xDist, startY)
+    TL2 = (startX, startY)
+    TL3 = (startX, startY - yDist)
+    BR1 = (endX - xDist, endY)
+    BR2 = (endX, endY)
+    BR3 = (endX, endY + yDist)
 
-    BL1  =  (startX,        startY+yDist)
-    BL2  =  (startX,        startY)
-    BL3  =  (startX+xDist,  startY)
-    TR1  =  (endX,          endY-yDist)
-    TR2  =  (endX,          endY)
-    TR3  =  (endX-xDist,    endY)
-
+    BL1 = (startX, startY + yDist)
+    BL2 = (startX, startY)
+    BL3 = (startX + xDist, startY)
+    TR1 = (endX, endY - yDist)
+    TR2 = (endX, endY)
+    TR3 = (endX - xDist, endY)
 
     if direction == 'topDown':
         pen.moveTo(TL1)
@@ -788,13 +819,13 @@ def arc(pen, start, end, side, stroke, radius, butt=0):
     # Bezier point distance for drawing circles.
 
     if side == 'TL':
-        yflip =  1
-        xflip =  1
+        yflip = 1
+        xflip = 1
     if side == 'BL':
         yflip = -1
-        xflip =  1
+        xflip = 1
     if side == 'TR':
-        yflip =  1
+        yflip = 1
         xflip = -1
     if side == 'BR':
         yflip = -1
@@ -806,58 +837,120 @@ def arc(pen, start, end, side, stroke, radius, butt=0):
     endY = end[1]
 
     cStartX = startX
-    cStartY = endY-(radius*yflip)
-    cEndX   = startX+(radius*xflip)
-    cEndY   = endY
+    cStartY = endY - (radius * yflip)
+    cEndX = startX + (radius * xflip)
+    cEndY = endY
 
-    start1 = (startX-(stroke/2*xflip), startY)
-    start2 = (startX+(stroke/2*xflip), startY)
-    end1   = (endX+(butt/2*xflip), endY-(stroke/2*yflip))
-    end2   = (endX+(butt/2*xflip), endY+(stroke/2*yflip))
+    start1 = (startX - (stroke / 2 * xflip), startY)
+    start2 = (startX + (stroke / 2 * xflip), startY)
+    end1 = (endX + (butt / 2 * xflip), endY - (stroke / 2 * yflip))
+    end2 = (endX + (butt / 2 * xflip), endY + (stroke / 2 * yflip))
 
-    IAstart  = (cStartX+(stroke/2*xflip),cStartY)
-    IApoint1 = (cStartX+(stroke/2*xflip),cStartY+((radius-stroke/2)*kappa*yflip))
-    IApoint2 = (cEndX-((radius-stroke/2)*kappa*xflip),cEndY-(stroke/2*yflip))
-    IAend    =  (cEndX,cEndY-(stroke/2*yflip))
+    IAstart = (cStartX + (stroke / 2 * xflip), cStartY)
 
-    OAstart  = (cEndX,cEndY+(stroke/2*yflip))
-    OApoint1 = (cEndX-((radius+stroke/2)*kappa*xflip), cEndY+(stroke/2*yflip))
-    OApoint2 = (cStartX-(stroke/2*xflip), cStartY+((radius+stroke/2)*kappa*yflip))
-    OAend    = (cStartX-(stroke/2*xflip),cStartY)
+    IApoint1 = (
+        cStartX + (stroke / 2 * xflip),
+        cStartY + ((radius - stroke / 2) * kappa * yflip)
+    )
+    IApoint2 = (
+        cEndX - ((radius - stroke / 2) * kappa * xflip),
+        cEndY - (stroke / 2 * yflip)
+    )
+    IAend = (cEndX, cEndY - (stroke / 2 * yflip))
 
-    drawArc(pen, start1, start2, end1, end2, IAstart, IApoint1, IApoint2, IAend, OAstart, OApoint1, OApoint2, OAend)
+    OAstart = (cEndX, cEndY + (stroke / 2 * yflip))
+
+    OApoint1 = (
+        cEndX - ((radius + stroke / 2) * kappa * xflip),
+        cEndY + (stroke / 2 * yflip)
+    )
+    OApoint2 = (
+        cStartX - (stroke / 2 * xflip),
+        cStartY + ((radius + stroke / 2) * kappa * yflip)
+    )
+    OAend = (cStartX - (stroke / 2 * xflip), cStartY)
+
+    drawArc(
+        pen,
+        start1, start2,
+        end1, end2,
+        IAstart,
+        IApoint1, IApoint2,
+        IAend,
+        OAstart,
+        OApoint1, OApoint2,
+        OAend
+    )
 
 
 def horBar(fatness=1, median=MEDIAN, buttL=BUTT, buttR=BUTT):
     "Horizontal bar."
 
-    horLine(boxPen, (0,median), (WIDTH,median), STROKE*fatness, buttL, buttR)
+    horLine(
+        boxPen,
+        (0, median),
+        (WIDTH, median),
+        STROKE * fatness,
+        buttL, buttR
+    )
 
 
 def vertBar(fatness=1, buttB=0, buttT=0):
     "Vertical bar."
 
-    vertLine(boxPen, (WIDTH/2,MEDIAN-HEIGHT/2), (WIDTH/2,MEDIAN+HEIGHT/2), STROKE*fatness, buttB, buttT)
+    vertLine(
+        boxPen,
+        (WIDTH / 2, MEDIAN - HEIGHT / 2),
+        (WIDTH / 2, MEDIAN + HEIGHT / 2),
+        STROKE * fatness,
+        buttB, buttT
+    )
 
 
 def horHalfBar(side, fatness=1, median=MEDIAN, buttL=BUTT, buttR=BUTT):
     "Halfwidth horizontal bar, left or right."
 
     if side == 'left':
-        if buttR == BUTT: buttR = 0
-        horLine(boxPen, (0,median), (WIDTH/2,median), STROKE*fatness, buttL, buttR)
+        if buttR == BUTT:
+            buttR = 0
+        horLine(
+            boxPen,
+            (0, median),
+            (WIDTH / 2, median),
+            STROKE * fatness,
+            buttL, buttR
+        )
     elif side == 'right':
-        if buttL == BUTT: buttL = 0
-        horLine(boxPen, (WIDTH/2,median), (WIDTH,median), STROKE*fatness, buttL, buttR)
+        if buttL == BUTT:
+            buttL = 0
+        horLine(
+            boxPen,
+            (WIDTH / 2, median),
+            (WIDTH, median),
+            STROKE * fatness,
+            buttL, buttR
+        )
 
 
 def vertHalfBar(fold, fatness=1, buttB=0, buttT=0):
     "Halfheight vertical bar, top or bottom."
 
     if fold == 'top':
-        vertLine(boxPen, (WIDTH/2,MEDIAN), (WIDTH/2,MEDIAN+HEIGHT/2), STROKE*fatness, buttB, buttT)
+        vertLine(
+            boxPen,
+            (WIDTH / 2, MEDIAN),
+            (WIDTH / 2, MEDIAN + HEIGHT / 2),
+            STROKE * fatness,
+            buttB, buttT
+        )
     if fold == 'bottom':
-        vertLine(boxPen, (WIDTH/2,MEDIAN-HEIGHT/2), (WIDTH/2,MEDIAN), STROKE*fatness, buttB, buttT)
+        vertLine(
+            boxPen,
+            (WIDTH / 2, MEDIAN - HEIGHT / 2),
+            (WIDTH / 2, MEDIAN),
+            STROKE * fatness,
+            buttB, buttT
+        )
 
 
 def horSplitBar(fatness=1, buttL=BUTT, buttR=BUTT):
@@ -873,10 +966,22 @@ def horSplitBar(fatness=1, buttL=BUTT, buttR=BUTT):
 def vertSplitBar(fatness=1, buttB=0, buttT=0):
     "Double-stroked vertical bar, top or bottom."
 
-    leftX = WIDTH/2-(STROKE*fatness)
-    rightX = WIDTH/2+(STROKE*fatness)
-    vertLine(boxPen, (leftX,MEDIAN-HEIGHT/2), (leftX,MEDIAN+HEIGHT/2), STROKE*fatness, buttB, buttT)
-    vertLine(boxPen, (rightX,MEDIAN-HEIGHT/2), (rightX,MEDIAN+HEIGHT/2), STROKE*fatness, buttB, buttT)
+    leftX = WIDTH / 2 - (STROKE * fatness)
+    rightX = WIDTH / 2 + (STROKE * fatness)
+    vertLine(
+        boxPen,
+        (leftX, MEDIAN - HEIGHT / 2),
+        (leftX, MEDIAN + HEIGHT / 2),
+        STROKE * fatness,
+        buttB, buttT
+    )
+    vertLine(
+        boxPen,
+        (rightX, MEDIAN - HEIGHT / 2),
+        (rightX, MEDIAN + HEIGHT / 2),
+        STROKE * fatness,
+        buttB, buttT
+    )
 
 
 def horSplitHalfBar(side, fatness=1, buttL=BUTT, buttR=BUTT):
@@ -892,14 +997,39 @@ def horSplitHalfBar(side, fatness=1, buttL=BUTT, buttR=BUTT):
 def vertSplitHalfBar(fold, fatness=1, buttB=0, buttT=0):
     "Double-stroked halfheight vertical bar, top or bottom."
 
-    leftX = WIDTH/2- STROKE*fatness
-    rightX = WIDTH/2+ STROKE*fatness
+    leftX = WIDTH / 2 - STROKE * fatness
+    rightX = WIDTH / 2 + STROKE * fatness
+
     if fold == 'top':
-        vertLine(boxPen, (leftX,MEDIAN), (leftX,MEDIAN+HEIGHT/2), STROKE*fatness, buttB, buttT)
-        vertLine(boxPen, (rightX,MEDIAN), (rightX,MEDIAN+HEIGHT/2), STROKE*fatness, buttB, buttT)
+        vertLine(
+            boxPen,
+            (leftX, MEDIAN),
+            (leftX, MEDIAN + HEIGHT / 2),
+            STROKE * fatness,
+            buttB, buttT
+        )
+        vertLine(
+            boxPen,
+            (rightX, MEDIAN),
+            (rightX, MEDIAN + HEIGHT / 2),
+            STROKE * fatness,
+            buttB, buttT
+        )
     if fold == 'bottom':
-        vertLine(boxPen, (leftX,MEDIAN-HEIGHT/2), (leftX,MEDIAN), STROKE*fatness, buttB, buttT)
-        vertLine(boxPen, (rightX,MEDIAN-HEIGHT/2), (rightX,MEDIAN), STROKE*fatness, buttB, buttT)
+        vertLine(
+            boxPen,
+            (leftX, MEDIAN - HEIGHT / 2),
+            (leftX, MEDIAN),
+            STROKE * fatness,
+            buttB, buttT
+        )
+        vertLine(
+            boxPen,
+            (rightX, MEDIAN - HEIGHT / 2),
+            (rightX, MEDIAN),
+            STROKE * fatness,
+            buttB, buttT
+        )
 
 
 def outerCorner(side, fold, fatness=1, cornerMedian=MEDIAN):
@@ -911,21 +1041,42 @@ def outerCorner(side, fold, fatness=1, cornerMedian=MEDIAN):
         cornerMedian += STROKE * fatness
 
     if side == 'right':
-        horHalfBar(side, median=cornerMedian, buttL=3*STROKE, buttR=BUTT)
-        x = WIDTH/2- STROKE*fatness
+        horHalfBar(
+            side,
+            median=cornerMedian,
+            buttL=3 * STROKE,
+            buttR=BUTT
+        )
+        x = WIDTH / 2 - STROKE * fatness
+
     if side == 'left':
-        horHalfBar(side, median=cornerMedian, buttL=BUTT, buttR=3*STROKE)
-        x = WIDTH/2+ STROKE*fatness
+        horHalfBar(
+            side,
+            median=cornerMedian,
+            buttL=BUTT,
+            buttR=3 * STROKE
+        )
+        x = WIDTH / 2 + STROKE * fatness
 
     if fold == 'top':
         cornerMedian += STROKE * fatness
+        vertLine(
+            boxPen,
+            (x, cornerMedian),
+            (x, cornerMedian + HEIGHT / 2),
+            STROKE * fatness,
+            buttB=3 * STROKE
+        )
+
     if fold == 'bottom':
         cornerMedian -= STROKE * fatness
-
-    if fold == 'top':
-        vertLine(boxPen, (x,cornerMedian), (x,cornerMedian+HEIGHT/2), STROKE*fatness, buttB = 3*STROKE)
-    if fold == 'bottom':
-        vertLine(boxPen, (x,cornerMedian-HEIGHT/2), (x,cornerMedian), STROKE*fatness, buttT = 3*STROKE)
+        vertLine(
+            boxPen,
+            (x, cornerMedian - HEIGHT / 2),
+            (x, cornerMedian),
+            STROKE * fatness,
+            buttT=3 * STROKE
+        )
 
 
 def innerCorner(side, fold, fatness=1, cornerMedian=MEDIAN):
@@ -937,25 +1088,45 @@ def innerCorner(side, fold, fatness=1, cornerMedian=MEDIAN):
         cornerMedian -= STROKE * fatness
 
     if side == 'right':
-        horHalfBar(side, median=cornerMedian, buttL=-1*STROKE, buttR=BUTT)
-        x = WIDTH/2+ STROKE*fatness
+        horHalfBar(
+            side,
+            median=cornerMedian,
+            buttL=-1 * STROKE,
+            buttR=BUTT
+        )
+        x = WIDTH / 2 + STROKE * fatness
+
     if side == 'left':
-        horHalfBar(side, median=cornerMedian, buttL=BUTT, buttR=-1*STROKE)
-        x = WIDTH/2- STROKE*fatness
+        horHalfBar(
+            side,
+            median=cornerMedian,
+            buttL=BUTT,
+            buttR=-1 * STROKE
+        )
+        x = WIDTH / 2 - STROKE * fatness
 
     if fold == 'top':
         cornerMedian -= STROKE * fatness
+        vertLine(
+            boxPen,
+            (x, cornerMedian),
+            (x, cornerMedian + HEIGHT / 2),
+            STROKE * fatness,
+            buttB=-1 * STROKE
+        )
     if fold == 'bottom':
         cornerMedian += STROKE * fatness
-
-    if fold == 'top':
-        vertLine(boxPen, (x,cornerMedian), (x,cornerMedian+HEIGHT/2), STROKE*fatness, buttB = -1*STROKE)
-    if fold == 'bottom':
-        vertLine(boxPen, (x,cornerMedian-HEIGHT/2), (x,cornerMedian), STROKE*fatness, buttT = -1*STROKE)
+        vertLine(
+            boxPen,
+            (x, cornerMedian - HEIGHT / 2),
+            (x, cornerMedian),
+            STROKE * fatness,
+            buttT=-1 * STROKE
+        )
 
 
 def shiftCoords(coordList, xShift=0, yShift=0):
-    return [(x+xShift, y+yShift) for (x, y) in coordList]
+    return [(x + xShift, y + yShift) for (x, y) in coordList]
 
 
 def stripedShade(pen, shade):
@@ -976,25 +1147,20 @@ def stripedShade(pen, shade):
     # angle = math.asin(2 / math.hypot(1, 2))  # 1 : 2 ratio
     angle = math.radians(45)  # 1 : 1 ratio
 
-    yShift = MEDIAN - BLOCK_HEIGHT/2
+    yShift = MEDIAN - BLOCK_HEIGHT / 2
     hypotenuse = BLOCK_HEIGHT / math.sin(angle)
-
-    y_bot = BLOCK_ORIGIN[1]
-    y_top = BLOCK_ORIGIN[1] + BLOCK_HEIGHT
-    x_left = 0
-    x_rght = WIDTH
 
     # leftmost point:
     leftmost_x = 0 - math.cos(angle) * hypotenuse - stroke
     xValues = []
 
-    for xValue in floatRange(leftmost_x, WIDTH+stroke, step):
+    for xValue in floatRange(leftmost_x, WIDTH + stroke, step):
         xValues.append(xValue)
         xValues.append(xValue + stroke)
 
     drawList = []
 
-    for (raw_x1, raw_x2) in zip(xValues[:-1:2],xValues[1::2]):
+    for (raw_x1, raw_x2) in zip(xValues[:-1:2], xValues[1::2]):
         bot_x1 = roundInt(raw_x1)
         bot_x2 = roundInt(raw_x2)
         top_x1 = roundInt(raw_x1 + hypotenuse * math.cos(angle))
@@ -1031,12 +1197,12 @@ def stripedShade(pen, shade):
             bot_x2 = WIDTH
             top_y2 = 0
 
-
-        stripe = ((bot_x1, bot_y1),
+        stripe = (
+            (bot_x1, bot_y1),
             (bot_x2, bot_y2),
             (top_x2, top_y2),
             (top_x1, top_y1),
-            )
+        )
 
         drawList.append(shiftCoords(stripe, 0, yShift))
 
@@ -1055,21 +1221,20 @@ def verticalShade(pen, shade):
         step = WIDTH / 15
 
     stroke = WIDTH / 30
-    yShift = MEDIAN - HEIGHT/2
 
     for xValue in floatRange(0, WIDTH, step):
-        y_bot = MEDIAN - HEIGHT/2
+        y_bot = MEDIAN - HEIGHT / 2
         y_top = y_bot + HEIGHT
         x_left = xValue
         x_rght = xValue + stroke
 
-        drawRect(pen,
+        drawRect(
+            pen,
             (x_left, y_bot),
             (x_rght, y_bot),
             (x_rght, y_top),
             (x_left, y_top)
-            )
-
+        )
 
 
 # The main job is done here:
@@ -1116,7 +1281,9 @@ if f is not None:
     if inRF:
         # Modifying the glyph order, so it looks like the glyphs
         # have been appended at the end of the font.
-        oldGlyphOrder = [ g for g in f.lib['public.glyphOrder'] if g not in generatedGlyphs ]
+        oldGlyphOrder = [
+            g for g in f.lib['public.glyphOrder'] if g not in generatedGlyphs
+        ]
         newGlyphOrder = oldGlyphOrder + generatedGlyphs
         f.glyphOrder = newGlyphOrder
         f.lib['public.glyphOrder'] = newGlyphOrder
