@@ -19,12 +19,12 @@ of simple drawing commands; listed in the long dictionary below.
 width        = 600           # Glyph width.
 height       = 1400          # Height for line elements, including overlap.
 median       = 300           # Median line.
-stroke       = 30            # General stroke weight.
+stroke       = 160           # General stroke weight.
 fat          = 2             # Multiplication factor for drawing 'fat' lines; will multiply stroke weight.
 radius       = width/2       # Radius for arc elements.
-blockHeight  = 1400          # Height for block elements.
+blockHeight  = 1200          # Height for block elements.
 fatStroke    = stroke*fat    # Stroke thickness for 'fat' lines.
-butt         = stroke      # Horizontal overlap.
+butt         = stroke        # Horizontal overlap.
 
 # Those following values are for block elements, and are dependent of the values above.
 blockOrigin = (0,median-blockHeight/2)
@@ -546,11 +546,18 @@ names = {
 
 
     # Shades:
-    ('lightshade', '2591'):                     ['stripedShade(boxPen, "25")'],
+    ('lightshade', '2591'):                     ['verticalShade(boxPen, "25")'],
 
-    ('mediumshade', '2592'):                    ['stripedShade(boxPen, "50")'],
+    ('mediumshade', '2592'):                    ['verticalShade(boxPen, "50")'],
 
-    ('darkshade', '2593'):                      ['stripedShade(boxPen, "75")'],
+    ('darkshade', '2593'):                      ['verticalShade(boxPen, "75")'],
+
+
+    # ('lightshade', '2591'):                     ['stripedShade(boxPen, "25")'],
+
+    # ('mediumshade', '2592'):                    ['stripedShade(boxPen, "50")'],
+
+    # ('darkshade', '2593'):                      ['stripedShade(boxPen, "75")'],
 
 
     # Quadrants:
@@ -979,9 +986,7 @@ def stripedShade(pen, shade):
 
     # leftmost point:
     leftmost_x = 0 - math.cos(angle) * hypotenuse - stroke
-
     xValues = []
-    yValues = []
 
     for xValue in floatRange(leftmost_x, width+stroke, step):
         xValues.append(xValue)
@@ -1037,6 +1042,34 @@ def stripedShade(pen, shade):
 
     for (BL, BR, TR, TL) in drawList:
         drawPoly(pen, BL, BR, TR, TL)
+
+
+def verticalShade(pen, shade):
+    "Boring shading patterns, consisting of vertical lines."
+
+    if shade == '25':
+        step = width / 5
+    if shade == '50':
+        step = width / 10
+    if shade == '75':
+        step = width / 15
+
+    stroke = width / 30
+    yShift = median - height/2
+
+    for xValue in floatRange(0, width, step):
+        y_bot = median - height/2
+        y_top = y_bot + height
+        x_left = xValue
+        x_rght = xValue + stroke
+
+        drawRect(pen,
+            (x_left, y_bot),
+            (x_rght, y_bot),
+            (x_rght, y_top),
+            (x_left, y_top)
+            )
+
 
 
 # The main job is done here:
