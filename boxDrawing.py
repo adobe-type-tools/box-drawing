@@ -929,16 +929,16 @@ def polkaShade(pen, shade):
     vstep = 100
     hstep = 200
     if shade == '25':
-        radius = 30
+        radius = 24
     if shade == '50':
-        radius = 45
+        radius = 36
     if shade == '75':
-        radius = 60
+        radius = 54
 
     for w in xrange(0, WIDTH, hstep):
         for h in xrange(
-            MEDIAN - BLOCK_HEIGHT / 2,
-            MEDIAN + BLOCK_HEIGHT / 2,
+            roundInt(MEDIAN - BLOCK_HEIGHT / 2),
+            roundInt(MEDIAN + BLOCK_HEIGHT / 2),
             vstep * 2
         ):
             dot(
@@ -949,7 +949,7 @@ def polkaShade(pen, shade):
             dot(
                 boxPen,
                 (w + hstep / 2, h + vstep),
-                radius * 1.2
+                radius * 1.5
             )
 
 
