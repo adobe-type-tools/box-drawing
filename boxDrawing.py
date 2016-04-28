@@ -16,17 +16,24 @@ of simple drawing commands; listed in the long dictionary below.
 
 # ----------------------------------------------------------------
 # Edit these values if you want (currently set to match Source Code Pro):
-WIDTH = 600                # Glyph width.
-HEIGHT = 1400              # Height for line elements, including overlap.
-MEDIAN = 300               # Median line.
-STROKE = 160               # General stroke weight.
-FAT = 2                    # Multiplication factor for drawing 'fat' strokes.
-RADIUS = WIDTH / 2         # Radius for arc elements.
-BLOCK_HEIGHT = 1200        # Height for block elements.
-FAT_STROKE = STROKE * FAT  # STROKE thickness for 'fat' lines.
-BUTT = STROKE              # Horizontal overlap.
+WIDTH = 600                 # Glyph width.
+HEIGHT = 1400               # Height for line elements, including overlap.
+MEDIAN = 300                # Median line.
+STROKE = 160                # General stroke weight.
+FAT = 2                     # Multiplication factor for drawing 'fat' strokes.
+RADIUS = WIDTH / 2          # Radius for arc elements.
+BLOCK_HEIGHT = 1400         # Height for block elements.
+EM_HEIGHT = 1200            # Height for elements that don't connect
+                            # vertically, such as dashed strokes.
+FAT_STROKE = STROKE * FAT   # STROKE thickness for 'fat' lines.
+BUTT = STROKE               # Horizontal overlap.
 
-# Those following values are for block elements,
+
+# Bezier point distance for drawing circles.
+KAPPA = 4 * (math.sqrt(2) - 1) / 3
+
+
+# These values are for block elements,
 # and are dependent of the values above:
 BLOCK_ORIGIN = (0, MEDIAN - BLOCK_HEIGHT / 2)
 BLOCK_TOP = (WIDTH, MEDIAN + BLOCK_HEIGHT / 2)
@@ -588,14 +595,14 @@ names = {
         '2570'): ['arc(boxPen, (WIDTH/2,MEDIAN+HEIGHT/2), (WIDTH,MEDIAN), "BL", STROKE, RADIUS, BUTT)'],
 
     ('lightdiaguprightdnleftbxd',
-        '2571'): ['diagonal(boxPen, (0,MEDIAN-BLOCK_HEIGHT/2), (WIDTH,MEDIAN+BLOCK_HEIGHT/2), "bottomUp")'],
+        '2571'): ['diagonal(boxPen, (0,MEDIAN-EM_HEIGHT/2), (WIDTH,MEDIAN+EM_HEIGHT/2), "bottomUp")'],
 
     ('lightdiagupleftdnrightbxd',
-        '2572'): ['diagonal(boxPen, (0,MEDIAN+BLOCK_HEIGHT/2), (WIDTH,MEDIAN-BLOCK_HEIGHT/2), "topDown")'],
+        '2572'): ['diagonal(boxPen, (0,MEDIAN+EM_HEIGHT/2), (WIDTH,MEDIAN-EM_HEIGHT/2), "topDown")'],
 
     ('lightdiagcrossbxd',
-        '2573'): ['diagonal(boxPen, (0,MEDIAN+BLOCK_HEIGHT/2), (WIDTH,MEDIAN-BLOCK_HEIGHT/2), "topDown")',
-                  'diagonal(boxPen, (0,MEDIAN-BLOCK_HEIGHT/2), (WIDTH,MEDIAN+BLOCK_HEIGHT/2), "bottomUp")'],
+        '2573'): ['diagonal(boxPen, (0,MEDIAN+EM_HEIGHT/2), (WIDTH,MEDIAN-EM_HEIGHT/2), "topDown")',
+                  'diagonal(boxPen, (0,MEDIAN-EM_HEIGHT/2), (WIDTH,MEDIAN+EM_HEIGHT/2), "bottomUp")'],
 
 
     # Half-width/Half-height:
@@ -701,13 +708,13 @@ names = {
 
     # Shades:
     ('lightshade',
-        '2591'): ['verticalShade(boxPen, "25")'],
+        '2591'): ['polkaShade(boxPen, "25")'],
 
     ('mediumshade',
-        '2592'): ['verticalShade(boxPen, "50")'],
+        '2592'): ['polkaShade(boxPen, "50")'],
 
     ('darkshade',
-        '2593'): ['verticalShade(boxPen, "75")'],
+        '2593'): ['polkaShade(boxPen, "75")'],
 
 
     # Quadrants:
@@ -868,12 +875,12 @@ def dashedHorLine(pen, step, width=WIDTH, stroke=STROKE):
             )
 
 
-def dashedVertLine(pen, step, length=BLOCK_HEIGHT, stroke=STROKE):
+def dashedVertLine(pen, step, length=EM_HEIGHT, stroke=STROKE):
     "Dashed vertical bar."
 
     stepLength = length / step
     gap = stepLength / step
-    top = MEDIAN + BLOCK_HEIGHT / 2
+    top = MEDIAN + EM_HEIGHT / 2
 
     for h in floatRange(MEDIAN - length / 2, MEDIAN + length / 2, stepLength):
         if h + stepLength - gap < top:
@@ -886,9 +893,70 @@ def dashedVertLine(pen, step, length=BLOCK_HEIGHT, stroke=STROKE):
             )
 
 
+def dot(pen, center, radius):
+    x, y = center
+
+    pen.moveTo(
+        (x - radius, y)
+    )
+    pen.curveTo(
+        (x - radius, y - radius * KAPPA),
+        (x - radius * KAPPA, y - radius),
+        (x, y - radius)
+    )
+    pen.curveTo(
+        (x + radius * KAPPA, y - radius),
+        (x + radius, y - radius * KAPPA),
+        (x + radius, y)
+    )
+    pen.curveTo(
+        (x + radius, y + radius * KAPPA),
+        (x + radius * KAPPA, y + radius),
+        (x, y + radius)
+    )
+    pen.curveTo(
+        (x - radius * KAPPA, y + radius),
+        (x - radius, y + radius * KAPPA),
+        (x - radius, y)
+    )
+    pen.closePath()
+
+
+def polkaShade(pen, shade):
+    "Shading patterns, consisting of polka dots."
+    # Not used in recipes above, but maybe useful for somebody.
+
+    vstep = 100
+    hstep = 200
+    if shade == '25':
+        radius = 30
+    if shade == '50':
+        radius = 45
+    if shade == '75':
+        radius = 60
+
+    for w in xrange(0, WIDTH, hstep):
+        for h in xrange(
+            MEDIAN - BLOCK_HEIGHT / 2,
+            MEDIAN + BLOCK_HEIGHT / 2,
+            vstep * 2
+        ):
+            dot(
+                boxPen,
+                (w, h),
+                radius
+            )
+            dot(
+                boxPen,
+                (w + hstep / 2, h + vstep),
+                radius * 1.2
+            )
+
+
 def shade(pen, shade):
     "Shading patterns, consisting of little boxes."
     # Not used in recipes above, but maybe useful for somebody.
+    # Reliable way to crash makeOTF
 
     vstep = 50
     hstep = 100
@@ -920,10 +988,118 @@ def shade(pen, shade):
             )
 
 
+def stripedShade(pen, shade):
+    "Shading patterns, consisting of diagonal lines."
+
+    # This function assumes a bunch of right triangles being moved across
+    # the width of the glyph. Below, the law of sines is used for start-
+    # and endpoint calculations.
+
+    if shade == '25':
+        step = WIDTH / 3
+    if shade == '50':
+        step = WIDTH / 6
+    if shade == '75':
+        step = WIDTH / 12
+
+    stroke = WIDTH / 30
+    # angle = math.asin(2 / math.hypot(1, 2))  # 1 : 2 ratio
+    angle = math.radians(45)  # 1 : 1 ratio
+
+    yShift = MEDIAN - BLOCK_HEIGHT / 2
+    hypotenuse = BLOCK_HEIGHT / math.sin(angle)
+
+    # leftmost point:
+    leftmost_x = 0 - math.cos(angle) * hypotenuse - stroke
+    xValues = []
+
+    for xValue in floatRange(leftmost_x, WIDTH + stroke, step):
+        xValues.append(xValue)
+        xValues.append(xValue + stroke)
+
+    drawList = []
+
+    for (raw_x1, raw_x2) in zip(xValues[:-1:2], xValues[1::2]):
+        bot_x1 = roundInt(raw_x1)
+        bot_x2 = roundInt(raw_x2)
+        top_x1 = roundInt(raw_x1 + hypotenuse * math.cos(angle))
+        top_x2 = roundInt(raw_x2 + hypotenuse * math.cos(angle))
+
+        bot_y1 = 0
+        bot_y2 = 0
+        top_y1 = BLOCK_HEIGHT
+        top_y2 = BLOCK_HEIGHT
+
+        if bot_x1 <= 0:
+            bot_x1 = 0
+            bot_y1 = roundInt(math.tan(angle) * abs(raw_x1))
+
+        if bot_x2 <= 0:
+            bot_x2 = 0
+            bot_y2 = roundInt(math.tan(angle) * abs(raw_x2))
+
+        if top_x1 >= WIDTH:
+            top_x1 = WIDTH
+            top_y1 = roundInt(math.tan(angle) * abs(raw_x1 - WIDTH))
+
+        if top_x2 >= WIDTH:
+            top_x2 = WIDTH
+            top_y2 = roundInt(math.tan(angle) * abs(raw_x2 - WIDTH))
+
+        if top_y1 <= bot_y1:
+            top_y1 = bot_y1 = BLOCK_HEIGHT
+
+        if top_x1 <= bot_x1:
+            top_x1 = bot_x1 = WIDTH
+
+        if bot_x2 >= WIDTH:
+            bot_x2 = WIDTH
+            top_y2 = 0
+
+        stripe = (
+            (bot_x1, bot_y1),
+            (bot_x2, bot_y2),
+            (top_x2, top_y2),
+            (top_x1, top_y1),
+        )
+
+        drawList.append(shiftCoords(stripe, 0, yShift))
+
+    for (BL, BR, TR, TL) in drawList:
+        drawPoly(pen, BL, BR, TR, TL)
+
+
+def verticalShade(pen, shade):
+    "Boring shading patterns, consisting of vertical lines."
+
+    if shade == '25':
+        step = WIDTH / 3
+    if shade == '50':
+        step = WIDTH / 6
+    if shade == '75':
+        step = WIDTH / 12
+
+    stroke = WIDTH / 30
+
+    for xValue in floatRange(0, WIDTH, step):
+        y_bot = MEDIAN - HEIGHT / 2
+        y_top = y_bot + HEIGHT
+        x_left = xValue
+        x_rght = xValue + stroke
+
+        drawRect(
+            pen,
+            (x_left, y_bot),
+            (x_rght, y_bot),
+            (x_rght, y_top),
+            (x_left, y_top)
+        )
+
+
 def diagonal(pen, start, end, direction):
     "Diagonal line in two possible directions; either bottomUp or topDown."
 
-    diagonalLength = math.hypot(WIDTH, BLOCK_HEIGHT)
+    diagonalLength = math.hypot(WIDTH, EM_HEIGHT)
     angle1 = math.asin(WIDTH / diagonalLength)
     angle2 = math.pi / 2 - angle1
     xDist = STROKE / 2 / math.cos(angle1)
@@ -970,9 +1146,6 @@ def diagonal(pen, start, end, direction):
 def arc(pen, start, end, side, stroke, radius, butt=0):
     "Rounded corner."
 
-    kappa = 4 * (math.sqrt(2) - 1) / 3
-    # Bezier point distance for drawing circles.
-
     if side == 'TL':
         yflip = 1
         xflip = 1
@@ -1005,10 +1178,10 @@ def arc(pen, start, end, side, stroke, radius, butt=0):
 
     IApoint1 = (
         cStartX + (stroke / 2 * xflip),
-        cStartY + ((radius - stroke / 2) * kappa * yflip)
+        cStartY + ((radius - stroke / 2) * KAPPA * yflip)
     )
     IApoint2 = (
-        cEndX - ((radius - stroke / 2) * kappa * xflip),
+        cEndX - ((radius - stroke / 2) * KAPPA * xflip),
         cEndY - (stroke / 2 * yflip)
     )
     IAend = (cEndX, cEndY - (stroke / 2 * yflip))
@@ -1016,12 +1189,12 @@ def arc(pen, start, end, side, stroke, radius, butt=0):
     OAstart = (cEndX, cEndY + (stroke / 2 * yflip))
 
     OApoint1 = (
-        cEndX - ((radius + stroke / 2) * kappa * xflip),
+        cEndX - ((radius + stroke / 2) * KAPPA * xflip),
         cEndY + (stroke / 2 * yflip)
     )
     OApoint2 = (
         cStartX - (stroke / 2 * xflip),
-        cStartY + ((radius + stroke / 2) * kappa * yflip)
+        cStartY + ((radius + stroke / 2) * KAPPA * yflip)
     )
     OAend = (cStartX - (stroke / 2 * xflip), cStartY)
 
@@ -1282,114 +1455,6 @@ def innerCorner(side, fold, fatness=1, cornerMedian=MEDIAN):
 
 def shiftCoords(coordList, xShift=0, yShift=0):
     return [(x + xShift, y + yShift) for (x, y) in coordList]
-
-
-def stripedShade(pen, shade):
-    "Shading patterns, consisting of diagonal lines."
-
-    # This function assumes a bunch of right triangles being moved across
-    # the width of the glyph. Below, the law of sines is used for start-
-    # and endpoint calculations.
-
-    if shade == '25':
-        step = WIDTH / 3
-    if shade == '50':
-        step = WIDTH / 6
-    if shade == '75':
-        step = WIDTH / 12
-
-    stroke = WIDTH / 30
-    # angle = math.asin(2 / math.hypot(1, 2))  # 1 : 2 ratio
-    angle = math.radians(45)  # 1 : 1 ratio
-
-    yShift = MEDIAN - BLOCK_HEIGHT / 2
-    hypotenuse = BLOCK_HEIGHT / math.sin(angle)
-
-    # leftmost point:
-    leftmost_x = 0 - math.cos(angle) * hypotenuse - stroke
-    xValues = []
-
-    for xValue in floatRange(leftmost_x, WIDTH + stroke, step):
-        xValues.append(xValue)
-        xValues.append(xValue + stroke)
-
-    drawList = []
-
-    for (raw_x1, raw_x2) in zip(xValues[:-1:2], xValues[1::2]):
-        bot_x1 = roundInt(raw_x1)
-        bot_x2 = roundInt(raw_x2)
-        top_x1 = roundInt(raw_x1 + hypotenuse * math.cos(angle))
-        top_x2 = roundInt(raw_x2 + hypotenuse * math.cos(angle))
-
-        bot_y1 = 0
-        bot_y2 = 0
-        top_y1 = BLOCK_HEIGHT
-        top_y2 = BLOCK_HEIGHT
-
-        if bot_x1 <= 0:
-            bot_x1 = 0
-            bot_y1 = roundInt(math.tan(angle) * abs(raw_x1))
-
-        if bot_x2 <= 0:
-            bot_x2 = 0
-            bot_y2 = roundInt(math.tan(angle) * abs(raw_x2))
-
-        if top_x1 >= WIDTH:
-            top_x1 = WIDTH
-            top_y1 = roundInt(math.tan(angle) * abs(raw_x1 - WIDTH))
-
-        if top_x2 >= WIDTH:
-            top_x2 = WIDTH
-            top_y2 = roundInt(math.tan(angle) * abs(raw_x2 - WIDTH))
-
-        if top_y1 <= bot_y1:
-            top_y1 = bot_y1 = BLOCK_HEIGHT
-
-        if top_x1 <= bot_x1:
-            top_x1 = bot_x1 = WIDTH
-
-        if bot_x2 >= WIDTH:
-            bot_x2 = WIDTH
-            top_y2 = 0
-
-        stripe = (
-            (bot_x1, bot_y1),
-            (bot_x2, bot_y2),
-            (top_x2, top_y2),
-            (top_x1, top_y1),
-        )
-
-        drawList.append(shiftCoords(stripe, 0, yShift))
-
-    for (BL, BR, TR, TL) in drawList:
-        drawPoly(pen, BL, BR, TR, TL)
-
-
-def verticalShade(pen, shade):
-    "Boring shading patterns, consisting of vertical lines."
-
-    if shade == '25':
-        step = WIDTH / 5
-    if shade == '50':
-        step = WIDTH / 10
-    if shade == '75':
-        step = WIDTH / 15
-
-    stroke = WIDTH / 30
-
-    for xValue in floatRange(0, WIDTH, step):
-        y_bot = MEDIAN - HEIGHT / 2
-        y_top = y_bot + HEIGHT
-        x_left = xValue
-        x_rght = xValue + stroke
-
-        drawRect(
-            pen,
-            (x_left, y_bot),
-            (x_rght, y_bot),
-            (x_rght, y_top),
-            (x_left, y_top)
-        )
 
 
 # The main job is done here:
