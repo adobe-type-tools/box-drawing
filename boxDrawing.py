@@ -1489,7 +1489,7 @@ if f is not None:
     if inShell:
         timeString = time.strftime("%Y-%m-%d_%H%M%S", time.localtime())
         fileName = '%s_boxes.ufo' % timeString
-        fileName = 'boxes.ufo'
+        # fileName = 'boxes.ufo'
         f.lib['public.glyphOrder'] = generatedGlyphs
         outputPath = os.sep.join((os.path.curdir, fileName))
         f.save(outputPath)
@@ -1501,12 +1501,12 @@ if f is not None:
     if inRF:
         # Modifying the glyph order, so it looks like the glyphs
         # have been appended at the end of the font.
-        oldGlyphOrder = [
-            g for g in f.lib['public.glyphOrder'] if g not in generatedGlyphs
-        ]
-        newGlyphOrder = oldGlyphOrder + generatedGlyphs
-        f.glyphOrder = newGlyphOrder
-        f.lib['public.glyphOrder'] = newGlyphOrder
+        glyphOrder = f.lib['public.glyphOrder']
+        if not set(generatedGlyphs) <= set(glyphOrder):
+            oldGlyphOrder = [g for g in glyphOrder if g not in generatedGlyphs]
+            newGlyphOrder = oldGlyphOrder + generatedGlyphs
+            f.glyphOrder = newGlyphOrder
+            f.lib['public.glyphOrder'] = newGlyphOrder
 
     if inGlyphs:
         f._object.font.enableUpdateInterface()
