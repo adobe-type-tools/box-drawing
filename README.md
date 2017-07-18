@@ -24,7 +24,7 @@ You can even run the script straight from the command line, which will generate 
 
 __Tested versions:__  
 Robofont: Version 1.4b (build 1302261653)  
-Glyphs: Version 1.3.17 (429)  
+Glyphs: Version 2.4.1 (983)  
 FontLab: 5.1.3 (4693)  
 
 
@@ -98,7 +98,7 @@ As an example, see the “source code” (pun) of the [Adobe Type Team holiday c
 	Why? Read on below: 
 	↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ 
 
-Most likely, the text above will not look real good. It is because most monospaced fonts (including the ones used in the Github CSS) do not include all of the Box Drawing Characters. Head over to the [Project Page][] for live examples of the text above (using Source Code Pro as a webfont), plus some more.
+Possibly, the text above will may look misaligned. It is because many monospaced fonts (including some of the ones used in the Github CSS) do not include all of the Box Drawing Characters. Head over to the [Project Page][] for live examples of the text above (using Source Code Pro as a webfont), plus some more.
 
 <!-- This is how the above text should look like if your browser is using a font with proper box drawing support (e.g. [Source Code Pro][scp]):  
 ![boxes](img/boxes.png)  
