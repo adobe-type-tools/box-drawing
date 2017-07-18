@@ -109,7 +109,7 @@ if f is None:
     f = RFont()
 
 if f is not None and inGlyphs:
-    f._object.font.disableUpdateInterface()
+    Font.disableUpdateInterface()
 
 
 names = {
@@ -1509,6 +1509,6 @@ if f is not None:
             f.lib['public.glyphOrder'] = newGlyphOrder
 
     if inGlyphs:
-        f._object.font.enableUpdateInterface()
+        Font.enableUpdateInterface()
 
     print '\nDone.'
