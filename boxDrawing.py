@@ -1509,6 +1509,9 @@ if f is not None:
             f.lib['public.glyphOrder'] = newGlyphOrder
 
     if inGlyphs:
+        # Update glyph names to comply with Glyphs's standard.
+        for glyphName in generatedGlyphs:
+            Font.glyphs[glyphName].updateGlyphInfo()
         Font.enableUpdateInterface()
 
     print '\nDone.'
