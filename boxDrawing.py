@@ -84,11 +84,11 @@ if inGlyphs:
     try:
         import objectsGS, GSPen
     except ImportError:
-        print '''
+        print('''
         The files GSPen.py and objectsGS.py are needed for
         Robofab to work in Glyphs. Please get them at
         https://github.com/schriftgestalt/Glyphs-Scripts
-        '''
+        ''')
     try:
         test = getattr(GSLayer, "removeOverlap")
         if not callable(test):
@@ -935,8 +935,8 @@ def polkaShade(pen, shade):
     if shade == '75':
         radius = 54
 
-    for w in xrange(0, WIDTH, hstep):
-        for h in xrange(
+    for w in range(0, WIDTH, hstep):
+        for h in range(
             roundInt(MEDIAN - BLOCK_HEIGHT / 2),
             roundInt(MEDIAN + BLOCK_HEIGHT / 2),
             vstep * 2
@@ -970,8 +970,8 @@ def shade(pen, shade):
         boxWidth = 45
         boxHeight = 70
 
-    for w in xrange(0, WIDTH, hstep):
-        for h in xrange(
+    for w in range(0, WIDTH, hstep):
+        for h in range(
             MEDIAN - BLOCK_HEIGHT / 2,
             MEDIAN + BLOCK_HEIGHT / 2,
             vstep * 2
@@ -1460,7 +1460,7 @@ def shiftCoords(coordList, xShift=0, yShift=0):
 # The main job is done here:
 
 if f is not None:
-    print 'Drawing boxes ...'
+    print('Drawing boxes ...')
 
     generatedGlyphs = []
     # Keeping track of the glyph order
@@ -1469,7 +1469,7 @@ if f is not None:
         # sorting the dictionary by the Unicode value of the glyph.
         generatedGlyphs.append(name)
         commands = names[name, uni]
-        print name
+        print(name)
 
         g = f.newGlyph(name, clear=True)
         g.width = WIDTH
@@ -1481,7 +1481,7 @@ if f is not None:
             g.removeOverlap()
             g.correctDirection()
 
-        g.unicode = int(uni, 16)
+        g.str = int(uni, 16)
         g.update()
 
     f.update()
@@ -1493,7 +1493,7 @@ if f is not None:
         f.lib['public.glyphOrder'] = generatedGlyphs
         outputPath = os.sep.join((os.path.curdir, fileName))
         f.save(outputPath)
-        print '\nFind your UFO file at %s' % os.path.abspath(outputPath)
+        print('\nFind your UFO file at %s' % os.path.abspath(outputPath))
 
     if inFL:
         fl.UpdateFont(fl.ifont)
@@ -1514,4 +1514,4 @@ if f is not None:
             Font.glyphs[glyphName].updateGlyphInfo()
         Font.enableUpdateInterface()
 
-    print '\nDone.'
+    print('\nDone.')
