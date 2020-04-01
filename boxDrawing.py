@@ -45,40 +45,40 @@ BLOCK_TOP = (WIDTH, MEDIAN + BLOCK_HEIGHT / 2)
 
 # Checking which application we are in:
 
-inRF = False
-inFL = False
-inGlyphs = False
-inShell = False
+IN_RF = False
+IN_FL = False
+IN_GLYPHS = False
+IN_SHELL = False
 
-if not any((inRF, inFL, inGlyphs)):
+if not any((IN_RF, IN_FL, IN_GLYPHS)):
     try:
         import mojo.roboFont
-        inRF = True
+        IN_RF = True
     except ImportError:
         pass
 
-if not any((inRF, inFL, inGlyphs)):
+if not any((IN_RF, IN_FL, IN_GLYPHS)):
     try:
         import GlyphsApp
-        inGlyphs = True
+        IN_GLYPHS = True
     except ImportError:
         pass
 
-if not any((inRF, inFL, inGlyphs)):
+if not any((IN_RF, IN_FL, IN_GLYPHS)):
     try:
         import flsys
-        inFL = True
+        IN_FL = True
     except ImportError:
         pass
 
-if not any((inRF, inFL, inGlyphs)):
-    inShell = True
+if not any((IN_RF, IN_FL, IN_GLYPHS)):
+    IN_SHELL = True
     import os
     import time
     from fontParts.fontshell import RFont
 
 
-if inGlyphs:
+if IN_GLYPHS:
     try:
         import GSPen
         from objectsGS import CurrentFont
@@ -99,7 +99,7 @@ if inGlyphs:
 
 
 # Check if a font is open -- if not, create a new one.
-if inShell:
+if IN_SHELL:
     f = RFont()
 else:
     f = CurrentFont()
@@ -107,7 +107,7 @@ else:
 if f is None:
     f = RFont()
 
-if f is not None and inGlyphs:
+if f is not None and IN_GLYPHS:
     Font.disableUpdateInterface()
 
 
@@ -116,14 +116,18 @@ def roundInt(float):
 
 
 def floatRange(x, y, step):
-    "Variation on range(), since step values for dashed lines may be floats."
+    '''
+    Variation on range(), since step values for dashed lines may be floats.
+    '''
     while x < y:
         yield x
         x += step
 
 
 def drawRect(pen, BL, BR, TR, TL):
-    "General drawing function for a rectangle."
+    '''
+    General drawing function for a rectangle.
+    '''
 
     pen.moveTo(BL)
     pen.lineTo(BR)
@@ -133,7 +137,9 @@ def drawRect(pen, BL, BR, TR, TL):
 
 
 def drawPoly(pen, *coords):
-    "General drawing function for a polygon."
+    '''
+    General drawing function for a polygon.
+    '''
 
     if len(set(coords)) >= 3:
         pen.moveTo(coords[0])
@@ -150,7 +156,9 @@ def drawArc(
     IAstart, IApoint1, IApoint2, IAend,
     OAstart, OApoint1, OApoint2, OAend
 ):
-    "General drawing function for an arc."
+    '''
+    General drawing function for an arc.
+    '''
 
     pen.moveTo(start1)
     pen.lineTo(start2)
@@ -165,7 +173,9 @@ def drawArc(
 
 
 def horLine(pen, start, end, stroke, buttL=BUTT, buttR=BUTT):
-    "General drawing function for a horizontal line."
+    '''
+    General drawing function for a horizontal line.
+    '''
 
     startX = start[0]
     startY = start[1]
@@ -181,7 +191,9 @@ def horLine(pen, start, end, stroke, buttL=BUTT, buttR=BUTT):
 
 
 def vertLine(pen, start, end, stroke, buttB=0, buttT=0):
-    "General drawing function for a vertical line."
+    '''
+    General drawing function for a vertical line.
+    '''
 
     startX = start[0]
     startY = start[1]
@@ -196,7 +208,9 @@ def vertLine(pen, start, end, stroke, buttB=0, buttT=0):
 
 
 def box(pen, start=BLOCK_ORIGIN, end=BLOCK_TOP):
-    "A box."
+    '''
+    A box.
+    '''
 
     startX = start[0]
     startY = start[1]
@@ -212,7 +226,9 @@ def box(pen, start=BLOCK_ORIGIN, end=BLOCK_TOP):
 
 
 def dashedHorLine(pen, step, width=WIDTH, stroke=STROKE):
-    "Dashed horizontal bar."
+    '''
+    Dashed horizontal bar.
+    '''
 
     stepLength = width / step
     gap = stepLength / step
@@ -230,7 +246,9 @@ def dashedHorLine(pen, step, width=WIDTH, stroke=STROKE):
 
 
 def dashedVertLine(pen, step, length=EM_HEIGHT, stroke=STROKE):
-    "Dashed vertical bar."
+    '''
+    Dashed vertical bar.
+    '''
 
     stepLength = length / step
     gap = stepLength / step
@@ -248,6 +266,9 @@ def dashedVertLine(pen, step, length=EM_HEIGHT, stroke=STROKE):
 
 
 def dot(pen, center, radius):
+    '''
+    A dot.
+    '''
     x, y = center
 
     pen.moveTo(
@@ -277,8 +298,10 @@ def dot(pen, center, radius):
 
 
 def polkaShade(pen, shade):
-    "Shading patterns, consisting of polka dots."
-    # Not used in recipes above, but maybe useful for somebody.
+    '''
+    Shading patterns, consisting of polka dots.
+    Not used in any of the drawing recipes, but perhaps useful for somebody.
+    '''
 
     vstep = 100
     hstep = 200
@@ -308,9 +331,11 @@ def polkaShade(pen, shade):
 
 
 def shade(pen, shade):
-    "Shading patterns, consisting of little boxes."
-    # Not used in recipes above, but maybe useful for somebody.
-    # Reliable way to crash makeOTF
+    '''
+    Shading patterns, consisting of little boxes.
+    Not used in any of the drawing recipes, but maybe useful for somebody.
+    Reliable way to crash makeOTF (in 2016).
+    '''
 
     vstep = 50
     hstep = 100
@@ -343,11 +368,13 @@ def shade(pen, shade):
 
 
 def stripedShade(pen, shade):
-    "Shading patterns, consisting of diagonal lines."
+    '''
+    Shading patterns, consisting of diagonal lines.
 
-    # This function assumes a bunch of right triangles being moved across
-    # the width of the glyph. Below, the law of sines is used for start-
-    # and endpoint calculations.
+    This function assumes a bunch of right triangles being moved across
+    the width of the glyph. The law of sines is used for start- and end
+    point calculations.
+    '''
 
     if shade == '25':
         step = WIDTH / 3
@@ -424,7 +451,9 @@ def stripedShade(pen, shade):
 
 
 def verticalShade(pen, shade):
-    "Boring shading patterns, consisting of vertical lines."
+    '''
+    Boring shading patterns, consisting of vertical lines.
+    '''
 
     if shade == '25':
         step = WIDTH / 3
@@ -451,7 +480,9 @@ def verticalShade(pen, shade):
 
 
 def diagonal(pen, start, end, direction):
-    "Diagonal line in two possible directions; either bottomUp or topDown."
+    '''
+    Diagonal line in two possible directions; either bottomUp or topDown.
+    '''
 
     diagonalLength = math.hypot(WIDTH, EM_HEIGHT)
     angle1 = math.asin(WIDTH / diagonalLength)
@@ -498,7 +529,9 @@ def diagonal(pen, start, end, direction):
 
 
 def arc(pen, start, end, side, stroke, radius, butt=0):
-    "Rounded corner."
+    '''
+    Rounded corner.
+    '''
 
     if side == 'TL':
         yflip = 1
@@ -566,7 +599,9 @@ def arc(pen, start, end, side, stroke, radius, butt=0):
 
 
 def horBar(fatness=1, median=MEDIAN, buttL=BUTT, buttR=BUTT):
-    "Horizontal bar."
+    '''
+    Horizontal bar.
+    '''
 
     horLine(
         boxPen,
@@ -578,7 +613,9 @@ def horBar(fatness=1, median=MEDIAN, buttL=BUTT, buttR=BUTT):
 
 
 def vertBar(fatness=1, buttB=0, buttT=0):
-    "Vertical bar."
+    '''
+    Vertical bar.
+    '''
 
     vertLine(
         boxPen,
@@ -590,7 +627,9 @@ def vertBar(fatness=1, buttB=0, buttT=0):
 
 
 def horHalfBar(side, fatness=1, median=MEDIAN, buttL=BUTT, buttR=BUTT):
-    "Halfwidth horizontal bar, left or right."
+    '''
+    Halfwidth horizontal bar, left or right.
+    '''
 
     if side == 'left':
         if buttR == BUTT != STROKE:
@@ -615,7 +654,9 @@ def horHalfBar(side, fatness=1, median=MEDIAN, buttL=BUTT, buttR=BUTT):
 
 
 def vertHalfBar(fold, fatness=1, buttB=0, buttT=0):
-    "Half-height vertical bar, top or bottom."
+    '''
+    Half-height vertical bar, top or bottom.
+    '''
 
     if fold == 'top':
         vertLine(
@@ -636,7 +677,9 @@ def vertHalfBar(fold, fatness=1, buttB=0, buttT=0):
 
 
 def horSplitBar(fatness=1, buttL=BUTT, buttR=BUTT):
-    "Double-stroked horizontal bar, left or right."
+    '''
+    Double-stroked horizontal bar, left or right.
+    '''
 
     topMedian = MEDIAN + STROKE * fatness
     bottomMedian = MEDIAN - STROKE * fatness
@@ -646,7 +689,9 @@ def horSplitBar(fatness=1, buttL=BUTT, buttR=BUTT):
 
 
 def vertSplitBar(fatness=1, buttB=0, buttT=0):
-    "Double-stroked vertical bar, top or bottom."
+    '''
+    Double-stroked vertical bar, top or bottom.
+    '''
 
     leftX = WIDTH / 2 - (STROKE * fatness)
     rightX = WIDTH / 2 + (STROKE * fatness)
@@ -667,7 +712,9 @@ def vertSplitBar(fatness=1, buttB=0, buttT=0):
 
 
 def horSplitHalfBar(side, fatness=1, buttL=BUTT, buttR=BUTT):
-    "Double-stroked halfwidth horizontal bar, left or right."
+    '''
+    Double-stroked halfwidth horizontal bar, left or right.
+    '''
 
     topMedian = MEDIAN + STROKE * fatness
     bottomMedian = MEDIAN - STROKE * fatness
@@ -677,7 +724,9 @@ def horSplitHalfBar(side, fatness=1, buttL=BUTT, buttR=BUTT):
 
 
 def vertSplitHalfBar(fold, fatness=1, buttB=0, buttT=0):
-    "Double-stroked half-height vertical bar, top or bottom."
+    '''
+    Double-stroked half-height vertical bar, top or bottom.
+    '''
 
     leftX = WIDTH / 2 - STROKE * fatness
     rightX = WIDTH / 2 + STROKE * fatness
@@ -715,7 +764,9 @@ def vertSplitHalfBar(fold, fatness=1, buttB=0, buttT=0):
 
 
 def outerCorner(side, fold, fatness=1, cornerMedian=MEDIAN):
-    "Outer part of a double-stroked corner."
+    '''
+    Outer part of a double-stroked corner.
+    '''
 
     if fold == 'top':
         cornerMedian -= STROKE * fatness
@@ -762,7 +813,9 @@ def outerCorner(side, fold, fatness=1, cornerMedian=MEDIAN):
 
 
 def innerCorner(side, fold, fatness=1, cornerMedian=MEDIAN):
-    "Inner part of a double-stroked corner."
+    '''
+    Inner part of a double-stroked corner.
+    '''
 
     if fold == 'top':
         cornerMedian += STROKE * fatness
@@ -811,8 +864,6 @@ def shiftCoords(coordList, xShift=0, yShift=0):
     return [(x + xShift, y + yShift) for (x, y) in coordList]
 
 
-# The main job is done here:
-
 if f is not None:
     print('Drawing boxes ...')
 
@@ -831,22 +882,22 @@ if f is not None:
         for command in commands:
             exec(command)
 
-        if not inShell:
+        if not IN_SHELL:
             g.removeOverlap()
             g.correctDirection()
 
         g.str = int(uni, 16)
-        if not any([inGlyphs, inFL]):
+        if not any([IN_GLYPHS, IN_FL]):
             g.changed()
         else:
             g.update()
 
-    if not any([inGlyphs, inFL]):
+    if not any([IN_GLYPHS, IN_FL]):
         f.changed()
     else:
         f.update()
 
-    if inShell:
+    if IN_SHELL:
         timeString = time.strftime("%Y-%m-%d_%H%M%S", time.localtime())
         fileName = '%s_boxes.ufo' % timeString
         # fileName = 'boxes.ufo'
@@ -855,10 +906,10 @@ if f is not None:
         f.save(outputPath)
         print('\nFind your UFO file at %s' % os.path.abspath(outputPath))
 
-    if inFL:
+    if IN_FL:
         fl.UpdateFont(fl.ifont)
 
-    if inRF:
+    if IN_RF:
         # Modifying the glyph order, so it looks like the glyphs
         # have been appended at the end of the font.
         glyphOrder = f.lib['public.glyphOrder']
@@ -868,7 +919,7 @@ if f is not None:
             f.glyphOrder = newGlyphOrder
             f.lib['public.glyphOrder'] = newGlyphOrder
 
-    if inGlyphs:
+    if IN_GLYPHS:
         # Update glyph names to comply with Glyphs' standard.
         for glyphName in generatedGlyphs:
             Font.glyphs[glyphName].updateGlyphInfo()
