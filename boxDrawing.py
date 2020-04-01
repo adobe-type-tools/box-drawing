@@ -8,10 +8,11 @@ __doc__ = '''
 This script will draw the Unicode ranges "Box Drawing Characters" (U+2500 to
 U+257F) and "Block Elements" (U+2580 to U+259F). It makes use of the FontParts
 Python library (https://github.com/robotools/fontParts).
-The script was successfully tested in RoboFont, Glyphs and FontLab.
+The script was successfully tested in RoboFont, Glyphs and on the command line.
 It is possible to run this script straight from the command line, given that
-Robofab can be imported. The box-drawing itself is done using combinations
-of simple drawing commands; listed in the long dictionary below.
+the FontParts Python module is installed. The drawing itself is done using
+combinations of simple drawing instructions; listed in the external
+boxDrawingRecipes.py module.
 
 '''
 
