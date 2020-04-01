@@ -5,8 +5,8 @@ import math
 __doc__ = '''
 
 This script will draw the Unicode ranges "Box Drawing Characters" (U+2500 to
-U+257F) and "Block Elements" (U+2580 to U+259F). It makes use of the Robofab
-Python library (https://github.com/robofab-developers/robofab).
+U+257F) and "Block Elements" (U+2580 to U+259F). It makes use of the FontParts
+Python library (https://github.com/robotools/fontParts).
 The script was successfully tested in RoboFont, Glyphs and FontLab.
 It is possible to run this script straight from the command line, given that
 Robofab can be imported. The box-drawing itself is done using combinations
@@ -76,9 +76,8 @@ if not any((inRF, inFL, inGlyphs)):
     import time
 
 
-
 if not inRF:
-    from robofab.world import RFont, CurrentFont
+    from fontParts.fontshell import RFont
 
 if inGlyphs:
     try:
@@ -103,7 +102,10 @@ if inGlyphs:
 
 # Check if a font is open -- if not, create a new one.
 
-f = CurrentFont()
+if inShell:
+    f = RFont()
+else:
+    f = CurrentFont()
 
 if f is None:
     f = RFont()
@@ -1482,9 +1484,9 @@ if f is not None:
             g.correctDirection()
 
         g.str = int(uni, 16)
-        g.update()
+        g.changed()
 
-    f.update()
+    f.changed()
 
     if inShell:
         timeString = time.strftime("%Y-%m-%d_%H%M%S", time.localtime())
