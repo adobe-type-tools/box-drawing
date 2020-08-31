@@ -879,6 +879,7 @@ if f is not None:
 
         g = f.newGlyph(name, clear=True)
         g.width = WIDTH
+        g.unicode = int(uni, 16)
         boxPen = g.getPen()
         for command in commands:
             exec(command)
